@@ -1,0 +1,5 @@
+{
+    "omnisharp.sdkIncludePrereleases": true,
+    "omnisharp.useModernNet": true,
+    "dotnet.defaultSolution": "payment-microservices.sln"
+}
