@@ -1,6 +1,5 @@
 global using Microsoft.AspNetCore.Mvc;
 global using System.Text.Json;
-global using Newtonsoft.Json;
+global using static System.Text.Json.JsonElement;
 
-global using produto_api.Models;
-global using produto_api.database;
+global using produto_api.Repository;

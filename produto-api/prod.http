@@ -1,2 +1,8 @@
 ###
-GET http://localhost:5139/Produto
+GET http://localhost:5139/api/v1/Produto
+
+###
+GET http://localhost:5139/api/v1/Produto/29587bee-7642-43bd-a635-076b18995f39
+
+###
+GET http://localhost:5139/api/v1/Produto/2

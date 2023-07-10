@@ -1,30 +1,38 @@
 namespace produto_api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/v1/[controller]")]
 public class ProdutoController : ControllerBase
 {
     private readonly ILogger<ProdutoController> _logger;
+    private readonly IProdutoRepository _produtoRepository;
 
-    public ProdutoController(ILogger<ProdutoController> logger)
+    public ProdutoController(ILogger<ProdutoController> logger, IProdutoRepository produtoRepository)
     {
         _logger = logger;
+        _produtoRepository = produtoRepository;
     }
 
+    // GET /api/v1/Produto
     [HttpGet]
-    public JsonElement GetProdutos()
+    public JsonElement GetAllProdutos()
     {
-        return LoadData();
+        return _produtoRepository.BuscarProdutos();
     }
 
-    public JsonElement LoadData()
+    // GET /api/v1/Produto/uuid
+    [HttpGet]
+    [Route("{uuid}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public ActionResult<string> GetProdutoPorUuId(string uuid)
     {
-        string conteudoJson = System.IO.File.ReadAllText("./Repository/products.json");
-
-        // Faz o parsing do conteúdo JSON para um objeto JsonDocument
-        JsonDocument jsonDocument = JsonDocument.Parse(conteudoJson);
-        var produtos = jsonDocument.RootElement;
-        Console.WriteLine();
-        return produtos;
+        try
+        {
+            return _produtoRepository.BuscarProdutoPorId(uuid);
+        }
+        catch (KeyNotFoundException error)
+        {
+            return NotFound(error.Message);
+        }        
     }
 }

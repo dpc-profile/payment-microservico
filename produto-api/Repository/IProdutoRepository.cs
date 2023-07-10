@@ -1,6 +1,6 @@
-namespace produto_api.database;
+namespace produto_api.Repository;
 public interface IProdutoRepository
 {
-    public IEnumerable<ProdutoModel> BuscarProdutos();
-    public ProdutoModel BuscarProdutosPorId(string uuid);
+    public JsonElement BuscarProdutos();
+    public string BuscarProdutoPorId(string uuid);
 }

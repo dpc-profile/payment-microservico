@@ -1,22 +1,38 @@
-namespace produto_api.database;
+namespace produto_api.Repository;
 
 public class ProdutoRepository : IProdutoRepository
 {
-    public IEnumerable<ProdutoModel> BuscarProdutos()
+    public string BuscarProdutoPorId(string uuid)
     {
-        throw new NotImplementedException();
+        ArrayEnumerator json = LoadData().EnumerateArray();
+
+        JsonElement resultado = json.FirstOrDefault(
+            x => x.GetProperty(propertyName: "uuid").GetString() == uuid);
+
+
+        if (resultado.ValueKind is JsonValueKind.Undefined)
+        {
+            throw new KeyNotFoundException(message: "Produto não encontrado");
+        }
+
+        return resultado.GetRawText();
     }
 
-    public ProdutoModel BuscarProdutosPorId(string uuid)
+    public JsonElement BuscarProdutos()
     {
-        throw new NotImplementedException();
+        return LoadData();
     }
 
-    public object loadData()
+    public JsonElement LoadData()
     {
-        string allText = System.IO.File.ReadAllText("./products.json");
+        string conteudoJson = File.ReadAllText("./Repository/products.json");
 
-        object? jsonObject = JsonConvert.DeserializeObject(allText);
-        return jsonObject;
+        // Fazer o parsing do JSON para um objeto
+        var jsonDocument = JsonDocument.Parse(conteudoJson);
+
+        // Acessar a propriedade "products"
+        JsonElement productsElement = jsonDocument.RootElement.GetProperty("products");
+
+        return productsElement;
     }
 }
