@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using client_app.Models;
-
-namespace client_app.Controllers;
+﻿namespace client_app.Controllers;
 
 public class HomeController : Controller
 {
@@ -19,11 +15,6 @@ public class HomeController : Controller
     }
 
     public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    public IActionResult Produtos()
     {
         return View();
     }
