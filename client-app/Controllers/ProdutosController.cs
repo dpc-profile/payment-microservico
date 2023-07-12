@@ -20,8 +20,23 @@ public class ProdutosController : Controller
 
     public async Task<IActionResult> ConfirmarOrdem(string uuid)
     {
-        _logger.LogInformation("Esse é o valor de uuid:", uuid);
-        ProdutoModel produto = await _produtoServices.GetProdutoPorUuidAsync(uuid);
+        ProdutoModel produto;
+        
+        try
+        {
+            produto = await _produtoServices.GetProdutoPorUuidAsync(uuid);
+        }
+        catch (HttpRequestException error)
+        {
+            _logger.LogInformation("Eu cai aqui em HttpRequestException", args: error.Message);
+            return View("ErroProcura");
+        }
+
         return View(produto);
+    }
+
+    public IActionResult ErroProcura()
+    {
+        return View();
     }
 }
