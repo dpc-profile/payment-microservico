@@ -8,9 +8,30 @@ public class ProdutoServices : IProdutoServices
         _httpClient = httpClient;
     }
 
-    public Task<ProdutoModel> GetProdutoPorUuidAsync()
+    public async Task<ProdutoModel> GetProdutoPorUuidAsync(string uuid)
     {
-        throw new NotImplementedException();
+        string? response = await _httpClient.GetStringAsync(requestUri: $"http://localhost:5034/api/v1/Produto/{uuid}");
+
+        using JsonDocument? jsonProduto = JsonDocument.Parse(response);
+
+        if (jsonProduto.RootElement.ValueKind is JsonValueKind.Object)
+        {
+            JsonElement produto = jsonProduto.RootElement;
+
+            string precoString = produto.GetProperty("price").ToString();
+
+            if (decimal.TryParse(precoString, result: out decimal price))
+            {
+                return new ProdutoModel
+                {
+                    Uuid = produto.GetProperty("uuid").ToString(),
+                    Produto = produto.GetProperty("product").ToString(),
+                    Preco = price
+                };
+            }
+        }
+
+        return new ProdutoModel();
     }
 
     public async Task<IEnumerable<ProdutoModel>> GetProdutosAsync()
@@ -21,7 +42,7 @@ public class ProdutoServices : IProdutoServices
 
         List<ProdutoModel>? productList = new();
 
-        foreach (var produto in produtos.RootElement.EnumerateArray())
+        foreach (JsonElement produto in produtos.RootElement.EnumerateArray())
         {
             string precoString = produto.GetProperty("price").ToString();
 

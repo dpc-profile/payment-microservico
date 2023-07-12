@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "ConfirmarOrdem";
+}
+@if (Model is not null)
+{
+    <h1>Confirmar Ordem</h1>
+    <p>Produto: @Model.Produto</p>
+    <p>Preço: R$@Model.Preco</p>
+}

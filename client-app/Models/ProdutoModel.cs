@@ -1,5 +1,5 @@
 namespace client_app.Models;
-public class ProdutoModel
+public record ProdutoModel
 {
     public string? Uuid { get; init; }
     public string? Produto { get; init; }
