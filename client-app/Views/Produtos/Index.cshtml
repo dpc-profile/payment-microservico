@@ -5,5 +5,13 @@
 
 <br>
 
-<p>Produto: Lettuce - Treviso</p>
-<p>Preço: 0.99 <button type="button" class="btn btn-primary">Comprar</button></p>
+@if (Model is not null)
+{
+    foreach (ProdutoModel produto in Model)
+    {
+        <p>Produto: @produto.Produto</p>
+        <p>Preço: R$@produto.Preco 
+            <a role="button" class="btn btn-primary" asp-route-id="@produto.Uuid" 
+            asp-controller="Pagamento" asp-action="ConfirmarOrdem">Comprar</a></p>
+    }
+}

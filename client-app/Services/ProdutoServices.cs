@@ -1,6 +1,12 @@
 namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
 {
+    private readonly HttpClient _httpClient;
+
+    public ProdutoServices(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 
     public Task<ProdutoModel> GetProdutoPorUuidAsync()
     {
@@ -9,14 +15,27 @@ public class ProdutoServices : IProdutoServices
 
     public async Task<IEnumerable<ProdutoModel>> GetProdutosAsync()
     {
-        IEnumerable<ProdutoModel>? productList = null;
+        string? response = await _httpClient.GetStringAsync(requestUri: "http://localhost:5034/api/v1/Produto");
 
-        HttpClient? httpClient = new();
+        using JsonDocument? produtos = JsonDocument.Parse(response);
 
-        HttpResponseMessage? response = await httpClient.GetAsync(requestUri: "https://localhost:7056/api/v1/Produto");
+        List<ProdutoModel>? productList = new();
 
-        string? data = await response.Content.ReadAsStringAsync();
+        foreach (var produto in produtos.RootElement.EnumerateArray())
+        {
+            string precoString = produto.GetProperty("price").ToString();
 
+            if (decimal.TryParse(precoString, out decimal price))
+            {
+                productList.Add(new ProdutoModel()
+                {
+                    Uuid = produto.GetProperty("uuid").ToString(),
+                    Produto = produto.GetProperty("product").ToString(),
+                    Preco = price
+
+                });
+            }
+        }
         return productList;
     }
 }
