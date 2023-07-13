@@ -33,6 +33,6 @@ public class ProdutoController : ControllerBase
         catch (KeyNotFoundException error)
         {
             return NotFound(error.Message);
-        }        
+        }
     }
 }

@@ -2,15 +2,25 @@ namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<ProdutoServices> _logger;
+    private readonly IConfiguration _configuration;
+    
+    private readonly string _uri;
+    private readonly string _apiVersion;
 
-    public ProdutoServices(HttpClient httpClient)
+    public ProdutoServices(ILogger<ProdutoServices> logger, HttpClient httpClient, IConfiguration configuration)
     {
+        _logger = logger;
+        _configuration = configuration;
         _httpClient = httpClient;
+        _uri = _configuration["PRODUTO_API"];
+        _apiVersion = _configuration["API_VERSION"];
+        _uri = $"{_uri}/api/{_apiVersion}/Produto";
     }
 
     public async Task<ProdutoModel> GetProdutoPorUuidAsync(string uuid)
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: $"http://localhost:5034/api/v1/Produto/{uuid}");
+        string? response = await _httpClient.GetStringAsync(requestUri: $"{_uri}/{uuid}");
 
         using JsonDocument? jsonProduto = JsonDocument.Parse(response);
 
@@ -36,7 +46,7 @@ public class ProdutoServices : IProdutoServices
 
     public async Task<IEnumerable<ProdutoModel>> GetProdutosAsync()
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: "http://localhost:5034/api/v1/Produto");
+        string? response = await _httpClient.GetStringAsync(requestUri: _uri);
 
         using JsonDocument? produtos = JsonDocument.Parse(response);
 
