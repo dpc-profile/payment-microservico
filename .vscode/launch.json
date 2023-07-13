@@ -9,10 +9,11 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
+            "requireExactSource": false,
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/produto-api/bin/Debug/net6.0/produto-api.dll",
+            "program": "${workspaceFolder}/client-app/bin/Debug/net6.0/client-app.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/produto-api",
+            "cwd": "${workspaceFolder}/client-app",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {

@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Lista de Produtos</h1>
+
+<br>
+
+@if (Model is not null)
+{
+    foreach (ProdutoModel produto in Model)
+    {
+        <p>Produto: @produto.Produto</p>
+        <p>Preço: R$@produto.Preco 
+            <a role="button" class="btn btn-primary" asp-route-uuid="@produto.Uuid" 
+            asp-controller="Produtos" asp-action="ConfirmarOrdem">Comprar</a>
+        </p>
+    }
+}
