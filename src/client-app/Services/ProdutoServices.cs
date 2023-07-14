@@ -32,7 +32,20 @@ public class ProdutoServices : IProdutoServices
 
             string precoString = produto.GetProperty("price").ToString();
 
-            if (decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out decimal price))
+            bool isParsed;
+            decimal price;
+
+            try
+            {
+                // Rodando no windows, é necessario usar essa linha, para fazer o parse corretamente mas também estoura excessão no linux
+                isParsed = decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out price);
+            }
+            catch (CultureNotFoundException)
+            {
+                isParsed = decimal.TryParse(precoString, out price);
+            }
+
+            if (isParsed)
             {
                 return new ProdutoModel
                 {
@@ -57,8 +70,21 @@ public class ProdutoServices : IProdutoServices
         foreach (JsonElement produto in produtos.RootElement.EnumerateArray())
         {
             string precoString = produto.GetProperty("price").ToString();
+        
+            bool isParsed;
+            decimal price;
 
-            if (decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out decimal price))
+            try
+            {
+                // Rodando no windows, é necessario usar essa linha, para fazer o parse corretamente mas também estoura excessão no linux
+                isParsed = decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out price);
+            }
+            catch (CultureNotFoundException)
+            {
+                isParsed = decimal.TryParse(precoString, out price);
+            }
+
+            if (isParsed)
             {
                 productList.Add(new ProdutoModel()
                 {
