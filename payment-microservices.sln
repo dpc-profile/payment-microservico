@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client-app", "src\client-ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "produto-api", "src\produto-api\produto-api.csproj", "{2C1669C8-7800-447A-8CFE-363E224C24DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checkout-api", "src\checkout-api\checkout-api.csproj", "{03E01203-E639-4262-B359-D9C3A67B9CCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{2C1669C8-7800-447A-8CFE-363E224C24DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C1669C8-7800-447A-8CFE-363E224C24DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C1669C8-7800-447A-8CFE-363E224C24DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03E01203-E639-4262-B359-D9C3A67B9CCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E01203-E639-4262-B359-D9C3A67B9CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03E01203-E639-4262-B359-D9C3A67B9CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E01203-E639-4262-B359-D9C3A67B9CCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

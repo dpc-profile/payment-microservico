@@ -1,0 +1,5 @@
+###
+GET http://localhost:5221/api/v1/Checkout
+
+###
+GET http://localhost:5221/api/v1/Checkout/a

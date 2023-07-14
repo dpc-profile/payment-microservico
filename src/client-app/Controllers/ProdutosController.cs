@@ -21,7 +21,7 @@ public class ProdutosController : Controller
     public async Task<IActionResult> ConfirmarOrdem(string uuid)
     {
         ProdutoModel produto;
-        
+
         try
         {
             produto = await _produtoServices.GetProdutoPorUuidAsync(uuid);
@@ -33,6 +33,20 @@ public class ProdutosController : Controller
         }
 
         return View(produto);
+    }
+
+    public IActionResult EnviarOrdem()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult EnviarOrdem(UsuarioInfosModel usuarioInfos)
+    {
+        _logger.LogInformation("Objeto de dados", usuarioInfos);
+        // Faz o post para checkout-api
+        // Exibe uma view simples de compra feita
+        return View();
     }
 
     public IActionResult ErroProcura()
