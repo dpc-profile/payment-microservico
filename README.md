@@ -31,3 +31,32 @@ Recebe a mensagem do __checkout-api__, consulta o __process-card-api(Nome tempor
 
 ### process-card-api(Nome temporario)
 Simula uma confirmação de pagamento de cartão de credito.
+
+___
+## Executando(Dev)
+Para executar o projeto, é necessario entrar em cada um dos projetos da pasta __src__ e executar em ordem:
+
+- 1º. produto-api
+- 2º client-app (Por ultimo)
+```sh
+$ dotnet run
+#ou
+$ dotnet watch
+```
+___
+
+## Variaveis de Ambiente
+De momento não é preciso se preocupar com isso, as variaveis de ambiente estão sendo definidas nos __appsettings.json__, mas apenas para deixar anotado.
+
+### client-app
+
+- PRODUTO_API - Endereço do serviço produto-api
+```sh
+# Exemplo
+PRODUTO_API=http://localhost:5034
+```
+- API_VERSION - Versão da API, no momento está a v1
+```sh
+# Exemplo
+API_VERSION=v1
+```
