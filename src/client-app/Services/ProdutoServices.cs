@@ -15,6 +15,7 @@ public class ProdutoServices : IProdutoServices
         _logger = logger;
         _configuration = configuration;
         _httpClient = httpClient;
+        
         _uri = _configuration["PRODUTO_API"];
         _apiVersion = _configuration["API_VERSION"];
         _uri = $"{_uri}/api/{_apiVersion}/Produto";
@@ -96,5 +97,10 @@ public class ProdutoServices : IProdutoServices
             }
         }
         return productList;
+    }
+
+    public void PostOrder(byte[] json)
+    {
+        throw new NotImplementedException();
     }
 }

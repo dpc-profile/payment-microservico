@@ -35,14 +35,17 @@ public class ProdutoController : Controller
         return View(produto);
     }
 
-    public IActionResult EnviarOrdem()
-    {
-        return View();
-    }
-
     [HttpPost]
     public IActionResult EnviarOrdem(UsuarioInfosModel usuarioInfos)
     {
+        // Serializa o usuarioInfo para enviar para checkout-api
+        byte[] jsonUtf8Bytes =JsonSerializer.SerializeToUtf8Bytes(usuarioInfos);
+        
+        _logger.LogDebug($"conteudo do json");
+        // Enviar dados para a checkout-api
+
+        // Exibir alguma mensagem falando que está sendo processada
+        // a compra
         return View(usuarioInfos);
     }
 
