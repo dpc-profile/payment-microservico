@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
 {
@@ -30,7 +32,7 @@ public class ProdutoServices : IProdutoServices
 
             string precoString = produto.GetProperty("price").ToString();
 
-            if (decimal.TryParse(precoString, result: out decimal price))
+            if (decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out decimal price))
             {
                 return new ProdutoModel
                 {
@@ -56,7 +58,7 @@ public class ProdutoServices : IProdutoServices
         {
             string precoString = produto.GetProperty("price").ToString();
 
-            if (decimal.TryParse(precoString, out decimal price))
+            if (decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out decimal price))
             {
                 productList.Add(new ProdutoModel()
                 {

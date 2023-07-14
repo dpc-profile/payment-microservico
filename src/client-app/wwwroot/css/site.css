@@ -17,6 +17,6 @@ body {
   margin-bottom: 60px;
 }
 
-input[type="form-text"] {
+input[type="text"] {
   width: 35%;
 }
