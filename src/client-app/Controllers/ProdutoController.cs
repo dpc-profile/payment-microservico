@@ -38,15 +38,13 @@ public class ProdutoController : Controller
     [HttpPost]
     public IActionResult EnviarOrdem(UsuarioInfosModel usuarioInfos)
     {
-        // Serializa o usuarioInfo para enviar para checkout-api
+        // Serializa o usuarioInfo para enviar
         byte[] jsonUtf8Bytes =JsonSerializer.SerializeToUtf8Bytes(usuarioInfos);
         
-        _logger.LogDebug($"conteudo do json");
-        // Enviar dados para a checkout-api
+        // Publica mensagem no RabbitMQ
 
-        // Exibir alguma mensagem falando que está sendo processada
-        // a compra
-        return View(usuarioInfos);
+        // Exibir alguma mensagem falando que está sendo processada a compra
+        return View();
     }
 
     public IActionResult ErroProcura()
