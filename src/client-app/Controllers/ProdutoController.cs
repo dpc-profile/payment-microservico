@@ -28,7 +28,7 @@ public class ProdutoController : Controller
         }
         catch (HttpRequestException error)
         {
-            _logger.LogInformation("Eu cai aqui em HttpRequestException", args: error.Message);
+            _logger.LogError(error, "Erro ao procurar o produto.");
             return View("ErroProcura");
         }
 
@@ -36,10 +36,10 @@ public class ProdutoController : Controller
     }
 
     [HttpPost]
-    public IActionResult EnviarOrdem(UsuarioInfosModel usuarioInfos)
+    public IActionResult EnviarOrdem(OrderModel order)
     {
         // Serializa o usuarioInfo para enviar
-        byte[] jsonUtf8Bytes =JsonSerializer.SerializeToUtf8Bytes(usuarioInfos);
+        byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(order);
         
         // Publica mensagem no RabbitMQ
 

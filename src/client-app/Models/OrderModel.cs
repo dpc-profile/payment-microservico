@@ -1,6 +1,6 @@
 namespace client_app.Models;
 
-public record UsuarioInfosModel
+public record OrderModel
 {
     public string? ProdutoId { get; init; }
     public string? Nome { get; init;}
