@@ -17,8 +17,8 @@ public class ProdutoServices : IProdutoServices
         _configuration = configuration;
         _httpClient = httpClient;
         
-        _uri = _configuration["PRODUTO_API"];
-        _apiVersion = _configuration["API_VERSION"];
+        _uri = _configuration["PRODUTO:URL"];
+        _apiVersion = _configuration["PRODUTO:VERSION"];
         _uri = $"{_uri}/api/{_apiVersion}/Produto";
     }
 

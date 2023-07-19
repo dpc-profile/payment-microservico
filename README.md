@@ -88,17 +88,17 @@ $ dotnet watch
 
 ___
 ## Variaveis de Ambiente
-De momento não é preciso se preocupar com isso, as variaveis de ambiente estão sendo definidas nos **appsettings.json**, mas apenas para deixar anotado.
+De momento não é preciso se preocupar com isso, as variaveis de ambiente estão sendo definidas nos **appsettings.json**, mas apenas para informar:
 
 ### client-app
-
-- PRODUTO_API - Endereço do serviço produto-api
+- PRODUTO:URL - Endereço do serviço produto-api
 ```sh
 # Exemplo
-PRODUTO_API=http://localhost:5034
+PRODUTO__URL=http://localhost:5034
 ```
-- API_VERSION - Versão da API, no momento está a v1
+
+- PRODUTO:VERSION - Versão da API, no momento a versão é v1
 ```sh
 # Exemplo
-API_VERSION=v1
+PRODUTO__VERSION=v1
 ```
