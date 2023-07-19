@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 
 namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
@@ -99,8 +100,13 @@ public class ProdutoServices : IProdutoServices
         return productList;
     }
 
-    public void PostOrder(byte[] json)
+    public async Task PublicaMensagemAsync(OrderModel order)
     {
-        throw new NotImplementedException();
+        // Serializa o objeto OrderModel para JSON
+        var json = JsonSerializer.Serialize(order);
+
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        await _httpClient.PostAsync("http://localhost:5086/api/v1/Message", content);
     }
 }

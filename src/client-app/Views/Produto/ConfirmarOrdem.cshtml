@@ -11,7 +11,7 @@
     <br>
     <h3>Insira seus dados</h3>
 	<form asp-controller="Produto" asp-action="EnviarOrdem" method="post">
-		<input type="hidden" name="produto_id" value=@Model.Uuid>
+		<input type="hidden" name="ProdutoId" value="@Model.Uuid">
 		<input class="form-control form-control-lg" type="text" name="Nome" placeholder="Nome" aria-label="Nome">
 		<input class="form-control form-control-lg" type="text" name="Email" placeholder="Email" aria-label="Email">
 		<input class="form-control form-control-lg" type="text" name="Telefone" placeholder="Telefone" aria-label="Telefone">

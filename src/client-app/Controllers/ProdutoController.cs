@@ -36,12 +36,10 @@ public class ProdutoController : Controller
     }
 
     [HttpPost]
-    public IActionResult EnviarOrdem(OrderModel order)
+    public async Task<IActionResult> EnviarOrdem(OrderModel order)
     {
-        // Serializa o usuarioInfo para enviar
-        byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(order);
-        
         // Publica mensagem no RabbitMQ
+        await _produtoServices.PublicaMensagemAsync(order);
 
         // Exibir alguma mensagem falando que está sendo processada a compra
         return View();
