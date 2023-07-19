@@ -7,17 +7,18 @@ namespace client_app.Controllers;
 public class MessageController : ControllerBase
 {
     private readonly ConnectionFactory _factory;
-    private readonly IConfiguration _configuration;
-    private const string CHECKOUT_QUEUE = "checkout_ex";
+    private readonly IConfiguration _config;
+    private readonly string checkout_queue;
 
     public MessageController(IConfiguration configuration)
     {
-        _configuration = configuration;
+        _config = configuration;
+        checkout_queue = _config["RABBITMQ:QUEUE"];
         _factory = new ConnectionFactory
         {
-            HostName = _configuration["RABBITMQ_HOSTNAME"],
-            UserName = _configuration["RABBITMQ_USERNAME"],
-            Password = _configuration["RABBITMQ_PASSWORD"]
+            HostName = _config["RABBITMQ:HOST"],
+            UserName = _config["RABBITMQ:USERNAME"],
+            Password = _config["RABBITMQ:PASSWORD"],
         };
     }
 
@@ -29,7 +30,7 @@ public class MessageController : ControllerBase
             using (IModel? channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                    queue: CHECKOUT_QUEUE,
+                    queue: checkout_queue,
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
@@ -40,7 +41,7 @@ public class MessageController : ControllerBase
 
                 channel.BasicPublish(
                     exchange: "",
-                    routingKey: CHECKOUT_QUEUE,
+                    routingKey: checkout_queue,
                     basicProperties: null,
                     body: bytesMessage
                 );

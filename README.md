@@ -26,10 +26,10 @@ ___
 ## Pendente
 
 ### checkout-api
-Recebe as informações de um produto e confirmar a compra.
+Consumir uma mensagem com as informações do produto, confirmar essas informações com **produto-api** e postar na fila do **order-api**.
 
 ### order-api
-Recebe a mensagem do **checkout-api**, consulta o **process-card-api(Nome temporario)** e processa a ordem.
+Consumir a mensagem postada pelo **checkout-api**, consulta o **process-card-api(Nome temporario)** e processa a ordem.
 
 ### process-card-api(Nome temporario)
 Simula uma confirmação de pagamento de cartão de credito.
@@ -38,23 +38,41 @@ ___
 ## Responsabilidades
 ### client-app
 - Fornece acesso ao usuário.
-- Quando o usuário finalizar o pedido, os dados desse pedido devem ser postado como mensagem no RabbitMQ.
-    - Os Dados são:
+- Quando o usuário finalizar o pedido, os dados desse pedido devem ser postado na fila **checkout_ex**.
+    - Os dados são:
         - ProdutoId
         - Nome
         - Email
         - Telefone
 - Ao finalizar o pedido, exibir uma mensagem informando que o pedido está sendo processado.
+- Ele postara a mensagem na fila .
+
+### produto-api
+- Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ### ckeckout-api
-- Ao pegar uma mensagem da fila de checkout, verificar se os dados do produto ainda são validos.
-- Confirmando os dados, postar o pedido na fila de order.
+- Ao consumir uma mensagem da fila **checkout_ex**, consulta o **produto-api** usando o ProdutoId.
+- Coleta os dados do pedido.
+- Após consultar, ele postara a mensagem na fila **order_ex**, com as informações do produto.
+    - Os dados são:
+        - ProdutoId
+        - ProdutoNome
+        - ProdutoPreco
+        - UsuarioNome
+        - UsuarioEmail
+        - UsuarioTelefone
+        - Status(por padrão vai ser "Pendente")
+        - CreatedAt (Usar o que já vem)
+        - UpdatedAt (no começo vai ser nulo)
 
 ### order-api
-- Ao pegar uma mensagem da fila de order, (postar mensagem no RabbitMQ para ser processado pelo **process-card-api(Nome temporario)**)????
+- Ao consumir uma mensagem da fila **order_ex**, postar mensagem em **process_card_ex** para ser consumida pelo **process-card-api**
+- Ao consumir uma mensagem da fila **processed_order_ex**, esse pedido será gravado no banco de dados, com isso finalizando o processo.
 
-### process-card-api(Nome temporario)
-- Ao pegar uma mensagem, altera seu status de "Pendente" para "Aprovado".
+### process-card-api
+- Ao consumir uma mensagem, altera seu status de "Pendente" para "Aprovado", e posta a mensagem novamente para o **order-api** finalizar o processo ao todo.
+- Ele postara a mensagem na fila **processed_order_ex**.
+- Ao alterar o status, o campo UpdatedAt também deve ser preenchido com o datetime
 
 ___
 ## Executando(Dev)
