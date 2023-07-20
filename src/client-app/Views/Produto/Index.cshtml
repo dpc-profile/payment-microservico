@@ -9,7 +9,7 @@
 {
     foreach (ProdutoModel produto in Model)
     {
-        <p>Produto: @produto.Produto</p>
+        <p>Produto: @produto.Nome</p>
         <p>Preço: R$@produto.Preco 
             <a role="button" class="btn btn-primary" asp-route-uuid="@produto.Uuid" 
             asp-controller="Produto" asp-action="ConfirmarOrdem">Comprar</a>
