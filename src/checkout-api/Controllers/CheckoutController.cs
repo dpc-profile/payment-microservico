@@ -1,10 +1,8 @@
 namespace checkout_api.Controllers;
 
-[ApiController]
-[Route("api/v1/[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class CheckoutController : ControllerBase
 {
-
     public IActionResult ValidaPedido()
     {
         // Consumir a mensagem do pedido
@@ -18,9 +16,9 @@ public class CheckoutController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
-    public ActionResult<IEnumerable<string>> Get()
-    {
-        return new string[] { "Ola1", "ola2" };
-    }
+    // [HttpGet]
+    // public ActionResult<IEnumerable<string>> Get()
+    // {
+    //     return new string[] { "Ola1", "ola2" };
+    // }
 }
