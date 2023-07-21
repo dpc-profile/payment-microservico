@@ -5,16 +5,18 @@ public class MessageConsumer : BackgroundService
     private readonly ILogger _logger;
     private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _config;
+    private readonly HttpClient _httpClient;
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
     private readonly string _checkout_queue;
 
-    public MessageConsumer(IServiceProvider serviceProvider, IConfiguration config, ILogger<MessageConsumer> logger)
+    public MessageConsumer(IServiceProvider serviceProvider, IConfiguration config, ILogger<MessageConsumer> logger, HttpClient httpClient)
     {
         _serviceProvider = serviceProvider;
         _config = config;
         _logger = logger;
+        _httpClient = httpClient;
 
         ConnectionFactory? factory = new()
         {
@@ -46,7 +48,7 @@ public class MessageConsumer : BackgroundService
 
             OrderModel? mensagem = JsonSerializer.Deserialize<OrderModel>(ref utf8Content);
 
-            NotifyUser(mensagem);
+            ConsumirMensagem(mensagem);
 
             _channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);
         };
@@ -56,13 +58,13 @@ public class MessageConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    public void NotifyUser(OrderModel mensagem)
+    private void ConsumirMensagem(OrderModel mensagem)
     {
-        using (IServiceScope? scope = _serviceProvider.CreateScope())
-        {
-            INotifiedServices? notificationService = scope.ServiceProvider.GetRequiredService<INotifiedServices>();
+        // Serializa o objeto OrderModel para JSON
+        string? json = JsonSerializer.Serialize(mensagem);
 
-            notificationService.ConsumirMensagem(mensagem);
-        }
+        StringContent? content = new(content: json, encoding: Encoding.UTF8, mediaType: "application/json");
+
+        _httpClient.PostAsync(requestUri: "http://localhost:5221/api/v1/Checkout", content);
     }
 }

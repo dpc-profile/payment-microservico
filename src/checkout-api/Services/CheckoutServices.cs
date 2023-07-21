@@ -32,9 +32,18 @@ public class CheckoutServices : ICheckoutServices
         return new ProdutoModel();
     }
 
-    public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosUsuario)
+    public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosOrder)
     {
-        throw new NotImplementedException();
+        return new OrderMessageModel()
+        {
+            ProdutoIUuid = dadosProduto.Uuid,
+            ProdutoNome = dadosProduto.Nome,
+            ProdutoPreco = dadosProduto.Preco,
+            UsuarioNome = dadosOrder.UsuarioNome,
+            UsuarioEmail = dadosOrder.UsuarioEmail,
+            UsuarioTelefone = dadosOrder.UsuarioTelefone,
+            CreatedAt = dadosOrder.CreatedAt
+        };
     }
 
     public void PublicarMensagem(OrderMessageModel mensagem)

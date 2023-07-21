@@ -25,21 +25,14 @@ public class CheckoutController : ControllerBase
             OrderMessageModel mensagem = _checkoutServices.CriarOrderMessage(dadosProduto: produto, dadosUsuario: order);
 
             // Posta a mensagem na fila order_ex
-            _checkoutServices.PublicarMensagem(mensagem);
+            //_checkoutServices.PublicarMensagem(mensagem);
 
             return Ok();
         }
         catch (Exception error)
         {
-            _logger.LogError(message: "Erro ao popular mensagem.", args: error);
+            _logger.LogError(message: "Erro ao popular mensagem.", args: error.Message);
             return BadRequest(error: "O processo do pedido explodiu por acidente.");
         }
-
     }
-
-    // [HttpGet]
-    // public ActionResult<IEnumerable<string>> Get()
-    // {
-    //     return new string[] { "Ola1", "ola2" };
-    // }
 }
