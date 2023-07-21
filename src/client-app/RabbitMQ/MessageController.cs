@@ -8,12 +8,12 @@ public class MessageController : ControllerBase
 {
     private readonly ConnectionFactory _factory;
     private readonly IConfiguration _config;
-    private readonly string checkout_queue;
+    private readonly string _checkout_queue;
 
     public MessageController(IConfiguration configuration)
     {
         _config = configuration;
-        checkout_queue = _config["RABBITMQ:QUEUE"];
+        _checkout_queue = _config["RABBITMQ:QUEUE_PRODUCE"];
         _factory = new ConnectionFactory
         {
             HostName = _config["RABBITMQ:HOST"],
@@ -30,7 +30,7 @@ public class MessageController : ControllerBase
             using (IModel? channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                    queue: checkout_queue,
+                    queue: _checkout_queue,
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
@@ -41,7 +41,7 @@ public class MessageController : ControllerBase
 
                 channel.BasicPublish(
                     exchange: "",
-                    routingKey: checkout_queue,
+                    routingKey: _checkout_queue,
                     basicProperties: null,
                     body: bytesMessage
                 );

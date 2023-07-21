@@ -2,18 +2,74 @@ namespace checkout_api.Services;
 
 public class CheckoutServices : ICheckoutServices
 {
-    public Task<ProdutoModel> ConsultarProdutoAPIAsync(string uuid)
+    private readonly HttpClient _httpClient;
+    private readonly IConfiguration _config;
+
+    private readonly string _produto_uri;
+
+    public CheckoutServices(HttpClient httpClient, IConfiguration config)
+    {
+        _httpClient = httpClient;
+        _config = config;
+
+        _produto_uri = _config["PRODUTO:URL"];
+        _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+    }
+
+    public async Task<ProdutoModel> ConsultarProduto(string uuid)
+    {
+        string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{uuid}");
+
+        using JsonDocument? jsonProduto = JsonDocument.Parse(response);
+
+        if (jsonProduto.RootElement.ValueKind is JsonValueKind.Object)
+        {
+            JsonElement produto = jsonProduto.RootElement;
+
+            return ConverterJsonParaObj(produto);
+        }
+
+        return new ProdutoModel();
+    }
+
+    public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosUsuario)
     {
         throw new NotImplementedException();
     }
 
-    public OrderModel ConsumirMensagem()
+    public void PublicarMensagem(OrderMessageModel mensagem)
     {
         throw new NotImplementedException();
     }
 
-    public Task PublicarMensagemAsync(OrderMessageModel message)
+    private ProdutoModel ConverterJsonParaObj(JsonElement produto)
     {
-        throw new NotImplementedException();
+        string precoString = produto.GetProperty("price").ToString();
+
+        bool isParsed;
+        decimal price;
+
+        try
+        {
+            // Rodando no windows, é necessario usar essa linha para fazer o parse corretamente,
+            // já que além de ignorar o primeiro digito se fosse 0, fazendo "0,99" ser "99",
+            // iria também não retornar o simbolo ',', fazendo "5,22" ser "522",
+            // mas o GetCultureInfo estava estourando excessão no linux, por isso o catch
+            isParsed = decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out price);
+        }
+        catch (CultureNotFoundException)
+        {
+            isParsed = decimal.TryParse(precoString, out price);
+        }
+
+        return isParsed
+            ? new ProdutoModel
+            {
+                Uuid = produto.GetProperty("uuid").ToString(),
+                Nome = produto.GetProperty("product").ToString(),
+                Preco = price
+            }
+            : new ProdutoModel();
     }
+
 }

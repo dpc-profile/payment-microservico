@@ -40,10 +40,10 @@ ___
 - Fornece acesso ao usuário.
 - Quando o usuário finalizar o pedido, os dados desse pedido devem ser postado na fila **checkout_ex**.
     - Os dados são:
-        - ProdutoId
-        - Nome
-        - Email
-        - Telefone
+        - ProdutoUuid
+        - UsuarioNome
+        - UsuarioEmail
+        - UsuarioTelefone
 - Ao finalizar o pedido, exibir uma mensagem informando que o pedido está sendo processado.
 - Ele postara a mensagem na fila .
 

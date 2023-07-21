@@ -9,7 +9,6 @@ public class ProdutoServices : IProdutoServices
     private readonly IConfiguration _configuration;
 
     private readonly string _uri;
-    private readonly string _apiVersion;
 
     public ProdutoServices(ILogger<ProdutoServices> logger, HttpClient httpClient, IConfiguration configuration)
     {
@@ -18,8 +17,7 @@ public class ProdutoServices : IProdutoServices
         _httpClient = httpClient;
 
         _uri = _configuration["PRODUTO:URL"];
-        _apiVersion = _configuration["PRODUTO:VERSION"];
-        _uri = $"{_uri}/api/{_apiVersion}/Produto";
+        _uri = $"{_uri}/api/{_configuration["PRODUTO:VERSION"]}/Produto";
     }
 
     public async Task<ProdutoModel> GetProdutoPorUuidAsync(string uuid)
@@ -90,16 +88,14 @@ public class ProdutoServices : IProdutoServices
             isParsed = decimal.TryParse(precoString, out price);
         }
 
-        if (isParsed)
-        {
-            return new ProdutoModel
+        return isParsed
+            ? new ProdutoModel
             {
                 Uuid = produto.GetProperty("uuid").ToString(),
                 Nome = produto.GetProperty("product").ToString(),
                 Preco = price
-            };
-        }
-
-        return new ProdutoModel();
+            }
+            : new ProdutoModel();
     }
+
 }

@@ -1,8 +1,10 @@
+namespace checkout_api.Services;
+
 public interface ICheckoutServices
 {
-    public OrderModel ConsumirMensagem();
-    public Task<ProdutoModel> ConsultarProdutoAPIAsync(string uuid);
+    public Task<ProdutoModel> ConsultarProduto(string uuid);
 
-    public Task PublicarMensagemAsync(OrderMessageModel message);
+    public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosUsuario);
 
+    public void PublicarMensagem(OrderMessageModel mensagem);
 }

@@ -2,7 +2,7 @@ namespace checkout_api.Models;
 
 public class OrderMessageModel
 {
-    public string? ProductId { get; init; }
+    public string? ProductIUuid { get; init; }
     public string? ProdutoNome { get; init; }
     public decimal ProdutoPreco { get; init; }
     public string? UsuarioNome { get; init; }

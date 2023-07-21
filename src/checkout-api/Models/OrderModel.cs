@@ -2,8 +2,9 @@ namespace checkout_api.Models;
 
 public record OrderModel
 {
-    public string? ProductId {get; init;}
-    public string? Nome {get; init;}
-    public string? Email {get; init;}
-    public string? Telefone {get; init;}
+    public string? ProdutoUuid { get; init; }
+    public string? UsuarioNome { get; init; }
+    public string? UsuarioEmail { get; init; }
+    public string? UsuarioTelefone { get; init; }
+    public DateTime CreatedAt { get; init; }
 }
