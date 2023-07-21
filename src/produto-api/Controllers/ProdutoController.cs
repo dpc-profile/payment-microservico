@@ -32,7 +32,8 @@ public class ProdutoController : ControllerBase
         }
         catch (KeyNotFoundException error)
         {
-            return NotFound(error.Message);
+            _logger.LogError(message: "Erro ao procurar o produto.", args: error);
+            return NotFound("Produto não encontrado");
         }
     }
 }

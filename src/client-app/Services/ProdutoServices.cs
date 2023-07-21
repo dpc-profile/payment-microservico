@@ -5,14 +5,12 @@ namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<ProdutoServices> _logger;
     private readonly IConfiguration _configuration;
 
     private readonly string _uri;
 
-    public ProdutoServices(ILogger<ProdutoServices> logger, HttpClient httpClient, IConfiguration configuration)
+    public ProdutoServices(HttpClient httpClient, IConfiguration configuration)
     {
-        _logger = logger;
         _configuration = configuration;
         _httpClient = httpClient;
 
@@ -46,13 +44,13 @@ public class ProdutoServices : IProdutoServices
 
         foreach (JsonElement produto in produtos.RootElement.EnumerateArray())
         {
-            ProdutoModel ObjConvertido = ConverterJsonParaObj(produto);
+            ProdutoModel objConvertido = ConverterJsonParaObj(produto);
 
             // Mesmo se as outras informações existirem,
             // sem o UUID não é possivel continuar o processo
             // então não adiciona o produto
-            if (!string.IsNullOrEmpty(ObjConvertido.Uuid))
-                productList.Add(ObjConvertido);
+            if (!string.IsNullOrEmpty(objConvertido.Uuid))
+                productList.Add(objConvertido);
         }
 
         return productList;
