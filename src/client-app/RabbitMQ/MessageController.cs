@@ -8,12 +8,12 @@ public class MessageController : ControllerBase
 {
     private readonly ConnectionFactory _factory;
     private readonly IConfiguration _config;
-    private readonly string _checkout_queue;
+    private readonly string _checkout_exchange;
 
     public MessageController(IConfiguration configuration)
     {
         _config = configuration;
-        _checkout_queue = _config["RABBITMQ:QUEUE_PRODUCE"];
+        _checkout_exchange = _config["RABBITMQ:EX_PRODUCE"];
         _factory = new ConnectionFactory
         {
             HostName = _config["RABBITMQ:HOST"],
@@ -29,19 +29,16 @@ public class MessageController : ControllerBase
         {
             using (IModel? channel = connection.CreateModel())
             {
-                channel.QueueDeclare(
-                    queue: _checkout_queue,
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null
+                channel.ExchangeDeclare(
+                    exchange: _checkout_exchange,
+                    type: ExchangeType.Direct
                 );
 
                 byte[] bytesMessage = JsonSerializer.SerializeToUtf8Bytes(message);
 
                 channel.BasicPublish(
-                    exchange: "",
-                    routingKey: _checkout_queue,
+                    exchange: _checkout_exchange,
+                    routingKey: "",
                     basicProperties: null,
                     body: bytesMessage
                 );
