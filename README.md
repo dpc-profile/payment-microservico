@@ -45,7 +45,8 @@ ___
         - UsuarioEmail
         - UsuarioTelefone
 - Ao finalizar o pedido, exibir uma mensagem informando que o pedido está sendo processado.
-- Ele postara a mensagem na fila .
+- (**Bônus**) Nessa pagina, o usuário deve ter acesso ao ID da transação e um acompanhamento visual dos processos finalizandos.
+- (**Bônus**) O usuário poderá consultar o status do pedido em uma aba, passando as mesmas informações do pedido(nome, email e telefone).
 
 ### produto-api
 - Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
