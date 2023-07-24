@@ -56,7 +56,7 @@ public class CheckoutServices : ICheckoutServices
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync("http://localhost:5221/api/v1/MessageProducer", content);
+        await _httpClient.PostAsync($"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);
     }
 
     private ProdutoModel ConverterJsonParaObj(JsonElement produto)

@@ -5,7 +5,6 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<INotifiedServices, NotifiedServices>();
 builder.Services.AddScoped<ICheckoutServices, CheckoutServices>();
 
 builder.Services.AddHostedService<MessageConsumer>();

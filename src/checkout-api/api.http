@@ -1,3 +1,4 @@
+// POST do ConsumirMensagemAsync em MessageConsumer
 ###
 POST http://localhost:5221/api/v1/Checkout
 Content-Type: application/json
@@ -8,4 +9,20 @@ Content-Type: application/json
     "UsuarioEmail":"daniel@gmail.com",
     "UsuarioTelefone":"11 2222-4444",
     "CreatedAt":"2023-07-24T14:38:07.8657621-03:00"
+}
+
+// Parte final, onde posta a mensagem
+###
+POST http://localhost:5221/api/v1/MessageProducer
+Content-Type: application/json
+
+{
+    "ProdutoIUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+    "ProdutoNome":"Tendrils - Baby Pea, Organic",
+    "ProdutoPreco":7.89,
+    "UsuarioNome":"daniel",
+    "UsuarioEmail":"daniel@gmail.com",
+    "UsuarioTelefone":"11 2222-4444",
+    "CreatedAt":"2023-07-24T14:38:07.8657621-03:00",
+    "UpdatedAt":null
 }
