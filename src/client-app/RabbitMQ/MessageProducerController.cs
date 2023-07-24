@@ -4,16 +4,16 @@ namespace client_app.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
-public class MessageController : ControllerBase
+public class MessageProducerController : ControllerBase
 {
     private readonly ConnectionFactory _factory;
     private readonly IConfiguration _config;
-    private readonly string _checkout_exchange;
+    private readonly string _exchange;
 
-    public MessageController(IConfiguration configuration)
+    public MessageProducerController(IConfiguration config)
     {
-        _config = configuration;
-        _checkout_exchange = _config["RABBITMQ:EX_PRODUCE"];
+        _config = config;
+        _exchange = _config["RABBITMQ:EX_PRODUCE"];
         _factory = new ConnectionFactory
         {
             HostName = _config["RABBITMQ:HOST"],
@@ -30,14 +30,14 @@ public class MessageController : ControllerBase
             using (IModel? channel = connection.CreateModel())
             {
                 channel.ExchangeDeclare(
-                    exchange: _checkout_exchange,
+                    exchange: _exchange,
                     type: ExchangeType.Direct
                 );
 
                 byte[] bytesMessage = JsonSerializer.SerializeToUtf8Bytes(message);
 
                 channel.BasicPublish(
-                    exchange: _checkout_exchange,
+                    exchange: _exchange,
                     routingKey: "",
                     basicProperties: null,
                     body: bytesMessage

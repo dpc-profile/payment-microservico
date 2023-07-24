@@ -2,21 +2,16 @@ namespace checkout_api.RabbitMQ;
 
 public class MessageConsumer : BackgroundService
 {
-    private readonly ILogger _logger;
     private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _config;
-    private readonly HttpClient _httpClient;
-    private readonly IConnection _connection;
     private readonly IModel _channel;
 
     private readonly string _queue;
 
-    public MessageConsumer(IServiceProvider serviceProvider, IConfiguration config, ILogger<MessageConsumer> logger, HttpClient httpClient)
+    public MessageConsumer(IServiceProvider serviceProvider, IConfiguration config)
     {
         _serviceProvider = serviceProvider;
         _config = config;
-        _logger = logger;
-        _httpClient = httpClient;
 
         ConnectionFactory? factory = new()
         {
@@ -27,7 +22,7 @@ public class MessageConsumer : BackgroundService
 
         _queue = _config["RABBITMQ:QUEUE_CONSUME"];
 
-        _connection = factory.CreateConnection();
+        IConnection _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(
             queue: _queue,
@@ -48,7 +43,7 @@ public class MessageConsumer : BackgroundService
 
             OrderModel? mensagem = JsonSerializer.Deserialize<OrderModel>(ref utf8Content);
 
-            ConsumirMensagem(mensagem);
+            ConsumirMensagemAsync(mensagem);
 
             _channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);
         };
@@ -58,13 +53,14 @@ public class MessageConsumer : BackgroundService
         return Task.CompletedTask;
     }
 
-    private void ConsumirMensagem(OrderModel mensagem)
+    private async void ConsumirMensagemAsync(OrderModel mensagem)
     {
         // Serializa o objeto OrderModel para JSON
         string? json = JsonSerializer.Serialize(mensagem);
 
         StringContent? content = new(content: json, encoding: Encoding.UTF8, mediaType: "application/json");
 
-        _httpClient.PostAsync(requestUri: "http://localhost:5221/api/v1/Checkout", content);
+        HttpClient client = new();
+        await client.PostAsync(requestUri: "http://localhost:5221/api/v1/Checkout", content);
     }
 }

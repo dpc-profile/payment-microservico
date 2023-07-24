@@ -63,7 +63,7 @@ public class ProdutoServices : IProdutoServices
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync("http://localhost:5086/api/v1/Message", content);
+        await _httpClient.PostAsync("http://localhost:5086/api/v1/MessageProducer", content);
     }
 
     private ProdutoModel ConverterJsonParaObj(JsonElement produto)
