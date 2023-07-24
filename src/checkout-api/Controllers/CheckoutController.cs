@@ -35,7 +35,7 @@ public class CheckoutController : ControllerBase
         catch (ArgumentNullException error)
         {
             _logger.LogError(message: error.Message, args: error);
-            return NotFound("O UUID do produto é nulo.");
+            return BadRequest("O UUID do produto é nulo.");
         }
         catch (NotFoundException error)
         {

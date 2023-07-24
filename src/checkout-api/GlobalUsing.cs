@@ -1,6 +1,7 @@
 global using System.Text;
 global using System.Text.Json;
 global using System.Globalization;
+global using System.ComponentModel.DataAnnotations;
 
 global using Microsoft.AspNetCore.Mvc;
 global using RabbitMQ.Client;
