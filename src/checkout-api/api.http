@@ -1,4 +1,5 @@
-// POST do ConsumirMensagemAsync em MessageConsumer
+// Começo do processo, infos ao consumir a mensagem.
+// ConsumirMensagemAsync em MessageConsumer.
 ###
 POST http://localhost:5221/api/v1/Checkout
 Content-Type: application/json
@@ -11,7 +12,8 @@ Content-Type: application/json
     "CreatedAt":"2023-07-24T14:38:07.8657621-03:00"
 }
 
-// Parte final, onde posta a mensagem
+// Parte final, onde posta a mensagem.
+// PublicarMensagemAsync em CheckoutController
 ###
 POST http://localhost:5221/api/v1/MessageProducer
 Content-Type: application/json
