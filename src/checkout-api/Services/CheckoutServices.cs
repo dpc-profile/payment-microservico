@@ -6,6 +6,7 @@ public class CheckoutServices : ICheckoutServices
     private readonly IConfiguration _config;
 
     private readonly string _produto_uri;
+    private readonly string _produce_uri;
 
     public CheckoutServices(HttpClient httpClient, IConfiguration config)
     {
@@ -14,9 +15,11 @@ public class CheckoutServices : ICheckoutServices
 
         _produto_uri = _config["PRODUTO:URL"];
         _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+
+        _produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
     }
 
-    public async Task<ProdutoModel> ConsultarProduto(string uuid)
+    public async Task<ProdutoModel> ConsultarProdutoAsync(string uuid)
     {
         string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{uuid}");
 
@@ -29,7 +32,7 @@ public class CheckoutServices : ICheckoutServices
             return ConverterJsonParaObj(produto);
         }
 
-        return new ProdutoModel();
+        throw new NotFoundException();
     }
 
     public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosOrder)
@@ -46,9 +49,14 @@ public class CheckoutServices : ICheckoutServices
         };
     }
 
-    public void PublicarMensagem(OrderMessageModel mensagem)
+    public async Task PublicarMensagemAsync(OrderMessageModel mensagem)
     {
-        throw new NotImplementedException();
+        // Serializa o objeto OrderModel para JSON
+        string json = JsonSerializer.Serialize(mensagem);
+
+        StringContent content = new(json, Encoding.UTF8, "application/json");
+
+        await _httpClient.PostAsync("http://localhost:5221/api/v1/MessageProducer", content);
     }
 
     private ProdutoModel ConverterJsonParaObj(JsonElement produto)

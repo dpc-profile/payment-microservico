@@ -20,19 +20,24 @@ public class CheckoutController : ControllerBase
         try
         {
             // Consultar o produto-api para coletar os dados do pedido
-            ProdutoModel? produto = await _checkoutServices.ConsultarProduto(order.ProdutoUuid);
+            ProdutoModel? produto = await _checkoutServices.ConsultarProdutoAsync(order.ProdutoUuid);
 
             // Junta os dados do pedido com os dados do usuario
             OrderMessageModel mensagem = _checkoutServices.CriarOrderMessage(dadosProduto: produto, dadosUsuario: order);
 
             // Posta a mensagem na fila order_ex
-            //_checkoutServices.PublicarMensagem(mensagem);
+            await _checkoutServices.PublicarMensagemAsync(mensagem);
 
             return Ok();
         }
+        catch (NotFoundException error)
+        {
+            _logger.LogError(message: "O produto procurado não existe.", args: error.Message);
+            return NotFound("O produto procurado não existe.");
+        }
         catch (Exception error)
         {
-            _logger.LogError(message: "Erro ao popular mensagem.", args: error.Message);
+            _logger.LogError(message: $"Erro generico em {nameof(PopulaMensagemComPedido)}: ", args: error.Message);
             return BadRequest(error: "O processo do pedido explodiu por acidente.");
         }
     }
