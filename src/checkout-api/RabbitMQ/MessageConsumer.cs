@@ -43,6 +43,8 @@ public class MessageConsumer : BackgroundService
 
             OrderModel? mensagem = JsonSerializer.Deserialize<OrderModel>(ref utf8Content);
 
+            if (mensagem is null) throw new JsonException("Não foi possivél deserializar a mensagem.");
+
             ConsumirMensagemAsync(mensagem);
 
             _channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);

@@ -32,7 +32,7 @@ public class CheckoutServices : ICheckoutServices
             return ConverterJsonParaObj(produto);
         }
 
-        throw new NotFoundException();
+        throw new NotFoundException("Produto não encontrado.");
     }
 
     public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosOrder)

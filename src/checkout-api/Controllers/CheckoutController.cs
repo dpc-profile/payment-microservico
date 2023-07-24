@@ -19,6 +19,8 @@ public class CheckoutController : ControllerBase
     {
         try
         {
+            if (order.ProdutoUuid is null) throw new KeyNotFoundException("O UUID do produto é nulo.");
+
             // Consultar o produto-api para coletar os dados do pedido
             ProdutoModel? produto = await _checkoutServices.ConsultarProdutoAsync(order.ProdutoUuid);
 
@@ -30,9 +32,14 @@ public class CheckoutController : ControllerBase
 
             return Ok();
         }
+        catch (KeyNotFoundException error)
+        {
+            _logger.LogError(message: error.Message, args: error);
+            return NotFound("O UUID do produto é nulo.");
+        }
         catch (NotFoundException error)
         {
-            _logger.LogError(message: "O produto procurado não existe.", args: error.Message);
+            _logger.LogError(message: error.Message, args: error);
             return NotFound("O produto procurado não existe.");
         }
         catch (Exception error)
