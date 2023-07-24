@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
     "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
-    "UsuarioNome":"d",
-    "UsuarioEmail":"d2@ga",
-    "UsuarioTelefone":"11 33333",
+    "UsuarioNome":"daniel",
+    "UsuarioEmail":"daniel@gmail.com",
+    "UsuarioTelefone":"11 2222-4444",
     "CreatedAt":"2023-07-24T14:38:07.8657621-03:00"
 }

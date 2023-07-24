@@ -1,6 +1,6 @@
 namespace checkout_api.Models;
 
-public class OrderMessageModel
+public record OrderMessageModel
 {
     [Required(ErrorMessage = "O UUID do produto é necessario.")]
     public string? ProdutoIUuid { get; init; }
@@ -23,7 +23,6 @@ public class OrderMessageModel
     [Phone(ErrorMessage = "O telefone informado é invalido.")]
     public string? UsuarioTelefone { get; init; }
 
-    [Required(ErrorMessage = "A data de criação do produto é necessaria.")]
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
 
