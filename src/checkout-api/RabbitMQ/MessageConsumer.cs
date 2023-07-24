@@ -9,7 +9,7 @@ public class MessageConsumer : BackgroundService
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    private readonly string _checkout_queue;
+    private readonly string _queue;
 
     public MessageConsumer(IServiceProvider serviceProvider, IConfiguration config, ILogger<MessageConsumer> logger, HttpClient httpClient)
     {
@@ -25,13 +25,13 @@ public class MessageConsumer : BackgroundService
             Password = _config["RABBITMQ:PASSWORD"],
         };
 
-        _checkout_queue = _config["RABBITMQ:QUEUE_CONSUME"];
+        _queue = _config["RABBITMQ:QUEUE_CONSUME"];
 
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.QueueDeclare(
-            queue: _checkout_queue,
-            durable: false,
+            queue: _queue,
+            durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null);
@@ -39,7 +39,7 @@ public class MessageConsumer : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        EventingBasicConsumer? consumer = new(model: _channel);
+        EventingBasicConsumer? consumer = new(_channel);
 
         consumer.Received += (sender, eventArgs) =>
         {
@@ -53,7 +53,7 @@ public class MessageConsumer : BackgroundService
             _channel.BasicAck(deliveryTag: eventArgs.DeliveryTag, multiple: false);
         };
 
-        _channel.BasicConsume(queue: _checkout_queue, autoAck: false, consumer);
+        _channel.BasicConsume(queue: _queue, autoAck: false, consumer);
 
         return Task.CompletedTask;
     }

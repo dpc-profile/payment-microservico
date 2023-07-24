@@ -13,6 +13,7 @@ public class CheckoutController : ControllerBase
         _checkoutServices = checkoutServices;
     }
 
+    // Recebe o POST de MessageConsumer
     [HttpPost]
     public async Task<IActionResult> PopulaMensagemComPedido([FromBody] OrderModel order)
     {
