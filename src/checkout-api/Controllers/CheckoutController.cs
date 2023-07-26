@@ -25,7 +25,7 @@ public class CheckoutController : ControllerBase
             ProdutoModel? produto = await _checkoutServices.ConsultarProdutoAsync(order.ProdutoUuid);
 
             // Junta os dados do pedido com os dados do usuario
-            OrderMessageModel mensagem = _checkoutServices.CriarOrderMessage(dadosProduto: produto, dadosUsuario: order);
+            OrderMessageModel mensagem = _checkoutServices.CriarOrderMessage(dadosProduto: produto, dadosOrder: order);
 
             // Posta a mensagem na fila order_ex
             await _checkoutServices.PublicarMensagemAsync(mensagem);
@@ -37,7 +37,12 @@ public class CheckoutController : ControllerBase
             _logger.LogError(message: error.Message, args: error);
             return BadRequest("O UUID do produto é nulo.");
         }
-        catch (NotFoundException error)
+        catch (HttpRequestException error)
+        {
+            _logger.LogWarning(message: error.Message, args: error);
+            return NotFound("O produto procurado não existe.");
+        }
+        catch (JsonException error)
         {
             _logger.LogError(message: error.Message, args: error);
             return NotFound("O produto procurado não existe.");
@@ -45,7 +50,7 @@ public class CheckoutController : ControllerBase
         catch (Exception error)
         {
             _logger.LogError(message: $"Erro generico em {nameof(PopulaMensagemComPedido)}: ", args: error.Message);
-            return BadRequest(error: "O processo do pedido explodiu por acidente.");
+            return BadRequest("Alguem tropeço e derrubou o pedido, acabou explodiu sobrando nada.");
         }
     }
 }

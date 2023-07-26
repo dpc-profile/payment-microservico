@@ -10,4 +10,3 @@ global using RabbitMQ.Client.Events;
 global using checkout_api.Models;
 global using checkout_api.RabbitMQ;
 global using checkout_api.Services;
-global using checkout_api.Exceptions;

@@ -6,7 +6,7 @@ public class CheckoutServices : ICheckoutServices
     private readonly IConfiguration _config;
 
     private readonly string _produto_uri;
-    private readonly string _produce_uri;
+    private readonly string _message_produce_uri;
 
     public CheckoutServices(HttpClient httpClient, IConfiguration config)
     {
@@ -16,23 +16,30 @@ public class CheckoutServices : ICheckoutServices
         _produto_uri = _config["PRODUTO:URL"];
         _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
 
-        _produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
+        _message_produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
     }
 
     public async Task<ProdutoModel> ConsultarProdutoAsync(string uuid)
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{uuid}");
-
-        using JsonDocument? jsonProduto = JsonDocument.Parse(response);
-
-        if (jsonProduto.RootElement.ValueKind is JsonValueKind.Object)
+        try
         {
-            JsonElement produto = jsonProduto.RootElement;
+            string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{uuid}");
 
-            return ConverterJsonParaObj(produto);
+            using JsonDocument? jsonProduto = JsonDocument.Parse(response);
+
+            if (jsonProduto.RootElement.ValueKind is JsonValueKind.Object)
+            {
+                JsonElement produto = jsonProduto.RootElement;
+
+                return ConverterJsonParaObj(produto);
+            }
+
+            throw new JsonException("Algo foi retornado da API que não é um json");
         }
-
-        throw new NotFoundException("Produto não encontrado.");
+        catch (JsonException error)
+        {
+            throw new JsonException(error.Message);
+        }
     }
 
     public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosOrder)
