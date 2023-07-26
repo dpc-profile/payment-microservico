@@ -19,5 +19,5 @@ public record OrderModel
     public string? UsuarioTelefone { get; init; }
 
     [Required(ErrorMessage = "A data de criação do produto é necessaria.")]
-    public DateTime CreatedAt { get; init; }
+    public DateTime CreatedAt { get; init; } = DateTime.Now;
 }

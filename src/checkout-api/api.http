@@ -9,7 +9,7 @@ Content-Type: application/json
     "UsuarioNome":"daniel",
     "UsuarioEmail":"daniel@gmail.com",
     "UsuarioTelefone":"11 2222-4444",
-    "CreatedAt":"2023-07-24T14:38:07.8657621-03:00"
+    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
 }
 
 // Parte final, onde posta a mensagem.
@@ -25,6 +25,7 @@ Content-Type: application/json
     "UsuarioNome":"daniel",
     "UsuarioEmail":"daniel@gmail.com",
     "UsuarioTelefone":"11 2222-4444",
-    "CreatedAt":"2023-07-24T14:38:07.8657621-03:00",
-    "UpdatedAt":null
+    "Status":"Pendente",
+    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00",
+    "UpdatedAt":"2023-07-26T17:15:03.2785272-03:00"
 }

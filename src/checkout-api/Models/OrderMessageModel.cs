@@ -23,7 +23,7 @@ public record OrderMessageModel
     [Phone(ErrorMessage = "O telefone informado é invalido.")]
     public string? UsuarioTelefone { get; init; }
 
+    public string Status { get; init; } = "Pendente";
     public DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
-
 }
