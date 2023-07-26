@@ -1,4 +1,4 @@
-namespace client_app.Controllers;
+namespace checkout_api.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]

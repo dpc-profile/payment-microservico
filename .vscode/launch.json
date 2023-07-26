@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "requireExactSource": false,
+            "requireExactSource": true,
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/checkout-api/bin/Debug/net6.0/checkout-api.dll",
             "args": [],
