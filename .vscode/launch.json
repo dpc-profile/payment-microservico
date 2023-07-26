@@ -9,11 +9,11 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "requireExactSource": false,
+            "requireExactSource": true,
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/client-app/bin/Debug/net6.0/client-app.dll",
+            "program": "${workspaceFolder}/src/checkout-api/bin/Debug/net6.0/checkout-api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/client-app",
+            "cwd": "${workspaceFolder}/src/checkout-api",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
