@@ -22,11 +22,42 @@ GET http://localhost:5034/api/v1/Produto
 GET http://localhost:5034/api/v1/Produto/{uuid-do-produto}
 ```
 
+### checkout-api
+Consome uma mensagem com as informações do usuário e do uuid do produto, consulta as informações de produto no **produto-api** e postar na fila as informações do produto e do usuário, para o **order-api** consumir.
+
+```sh
+# Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
+POST http://localhost:5221/api/v1/Checkout
+Content-Type: application/json
+
+{
+    "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+    "UsuarioNome":"daniel",
+    "UsuarioEmail":"daniel@gmail.com",
+    "UsuarioTelefone":"11 2222-4444",
+    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
+}
+```
+
+```sh
+# Post final, aonde é produzido a mensagem para o RabbitMQ.
+POST http://localhost:5221/api/v1/MessageProducer
+Content-Type: application/json
+
+{
+    "ProdutoIUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+    "ProdutoNome":"Tendrils - Baby Pea, Organic",
+    "ProdutoPreco":7.89,
+    "UsuarioNome":"daniel",
+    "UsuarioEmail":"daniel@gmail.com",
+    "UsuarioTelefone":"11 2222-4444",
+    "Status":"Pendente",
+    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00",
+    "UpdatedAt":"2023-07-26T17:15:03.2785272-03:00"
+}
+```
 ___
 ## Pendente
-
-### checkout-api
-Consumir uma mensagem com as informações do produto, confirmar essas informações com **produto-api** e postar na fila do **order-api**.
 
 ### order-api
 Consumir a mensagem postada pelo **checkout-api**, consulta o **process-card-api(Nome temporario)** e processa a ordem.
@@ -45,24 +76,24 @@ ___
         - UsuarioEmail
         - UsuarioTelefone
 - Ao finalizar o pedido, exibir uma mensagem informando que o pedido está sendo processado.
-- (**Bônus**) Nessa pagina, o usuário deve ter acesso ao ID da transação e um acompanhamento visual dos processos finalizandos.
-- (**Bônus**) O usuário poderá consultar o status do pedido em uma aba, passando as mesmas informações do pedido(nome, email e telefone).
+- (**Talves para implementar**) Nessa pagina, o usuário deve ter acesso ao ID da transação e um acompanhamento visual dos processos finalizandos.
+- (**Talves para implementar**) O usuário poderá consultar o status do pedido em uma aba, passando as mesmas informações do pedido(nome, email e telefone).
 
 ### produto-api
 - Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ### ckeckout-api
-- Ao consumir uma mensagem da fila **checkout_ex**, consulta o **produto-api** usando o ProdutoId.
+- Ao consumir uma mensagem da fila **checkout_queue**, consulta o **produto-api** usando o ProdutoUuid.
 - Coleta os dados do pedido.
-- Após consultar, ele postara a mensagem na fila **order_ex**, com as informações do produto.
+- Após consultar, ele postara a mensagem na exchange **order_ex**, com as informações do produto, junto com as do usuário.
     - Os dados são:
-        - ProdutoId
+        - ProdutoUuid
         - ProdutoNome
         - ProdutoPreco
         - UsuarioNome
         - UsuarioEmail
         - UsuarioTelefone
-        - Status(por padrão vai ser "Pendente")
+        - Status (por padrão vai ser "Pendente")
         - CreatedAt (Usar o que já vem)
         - UpdatedAt (no começo vai ser nulo)
 
@@ -79,8 +110,11 @@ ___
 ## Executando(Dev)
 Para executar o projeto, é necessario entrar em cada um dos projetos da pasta **src** e executar em ordem:
 
-- 1º. produto-api
-- 2º. client-app (Por ultimo)
+- 1º
+    produto-api
+    checkout-api
+- 2º 
+    client-app (Por ultimo)
 ```sh
 $ dotnet run
 #ou
@@ -91,15 +125,32 @@ ___
 ## Variaveis de Ambiente
 De momento não é preciso se preocupar com isso, as variaveis de ambiente estão sendo definidas nos **appsettings.json**, mas apenas para informar:
 
-### client-app
+### client-app / checkout-api
 - PRODUTO:URL - Endereço do serviço produto-api
 ```sh
-# Exemplo
+PRODUTO:URL=http://localhost:5034
+#ou
 PRODUTO__URL=http://localhost:5034
 ```
 
 - PRODUTO:VERSION - Versão da API, no momento a versão é v1
 ```sh
-# Exemplo
+PRODUTO:VERSION=v1
+#ou
 PRODUTO__VERSION=v1
+```
+
+### checkout-api
+- RABBITMQ:QUEUE_CONSUME - Fila que é consumida.
+```sh
+RABBITMQ:QUEUE_CONSUME=checkout_queue
+#ou
+RABBITMQ__QUEUE_CONSUME=checkout_queue
+```
+
+- RABBITMQ:EX_PRODUCE - Exchange aonde é postada mensagem.
+```sh
+RABBITMQ:EX_PRODUCE=order_ex
+#ou
+RABBITMQ__EX_PRODUCE=order_ex
 ```

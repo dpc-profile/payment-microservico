@@ -52,7 +52,8 @@ public class CheckoutServices : ICheckoutServices
             UsuarioNome = dadosOrder.UsuarioNome,
             UsuarioEmail = dadosOrder.UsuarioEmail,
             UsuarioTelefone = dadosOrder.UsuarioTelefone,
-            CreatedAt = dadosOrder.CreatedAt
+            CreatedAt = dadosOrder.CreatedAt,
+            UpdatedAt = DateTime.Now
         };
     }
 
