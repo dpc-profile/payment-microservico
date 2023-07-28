@@ -52,7 +52,7 @@ public class CheckoutServices : ICheckoutServices
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync($"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);    
+        await _httpClient.PostAsync(requestUri: _message_produce_uri, content);    
     }
 
     private void ValidarJsonProdutos(JsonElement produto)

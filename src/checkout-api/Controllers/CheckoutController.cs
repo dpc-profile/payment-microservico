@@ -39,12 +39,12 @@ public class CheckoutController : ControllerBase
         }
         catch (ProdutoNaoValidoException error)
         {
-            _logger.LogError(message: "O produto não é válido", args: error.Message);
+            _logger.LogWarning(message: "O produto não é válido", args: error.Message);
             return BadRequest("O produto não é válido");
         }
         catch (UsuarioNaoValidoException error)
         {
-            _logger.LogError(message: "Os dados do usuário não é válido", args: error.Message);
+            _logger.LogWarning(message: "Os dados do usuário não é válido", args: error.Message);
             return BadRequest("Os dados do usuário não é válido");
         }
         catch (Exception error)

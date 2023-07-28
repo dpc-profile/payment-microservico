@@ -8,8 +8,7 @@ Content-Type: application/json
     "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
     "UsuarioNome":"daniel",
     "UsuarioEmail":"daniel@gmail.com",
-    "UsuarioTelefone":"11 2222-4444",
-    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
+    "UsuarioTelefone":"11 2222-4444"
 }
 
 // Parte final, onde posta a mensagem.
@@ -19,13 +18,9 @@ POST http://localhost:5221/api/v1/MessageProducer
 Content-Type: application/json
 
 {
-    "ProdutoIUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
-    "ProdutoNome":"Tendrils - Baby Pea, Organic",
-    "ProdutoPreco":7.89,
-    "UsuarioNome":"daniel",
-    "UsuarioEmail":"daniel@gmail.com",
-    "UsuarioTelefone":"11 2222-4444",
-    "Status":"Pendente",
-    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00",
-    "UpdatedAt":"2023-07-26T17:15:03.2785272-03:00"
+   "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+   "UsuarioNome":"daniel",
+   "UsuarioEmail":"daniel@gmail.com",
+   "UsuarioTelefone":"11 2222-4444",
+   "CreatedAt":"2023-07-28T18:08:55.8822567-03:00"
 }
