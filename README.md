@@ -23,7 +23,7 @@ GET http://localhost:5034/api/v1/Produto/{uuid-do-produto}
 ```
 
 ### checkout-api
-Consome uma mensagem com as informações do usuário e do uuid do produto, consulta as informações de produto no **produto-api** e postar na fila as informações do produto e do usuário, para o **order-api** consumir.
+Consome uma mensagem com as informações do usuário e do uuid do produto, consulta as informações de produto no **produto-api** e valida o que foi recebido, "valida" as informações do usuário e postar na fila as informações do produto e do usuário, para o **order-api** consumir.
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
@@ -45,15 +45,11 @@ POST http://localhost:5221/api/v1/MessageProducer
 Content-Type: application/json
 
 {
-    "ProdutoIUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
-    "ProdutoNome":"Tendrils - Baby Pea, Organic",
-    "ProdutoPreco":7.89,
+    "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
     "UsuarioNome":"daniel",
     "UsuarioEmail":"daniel@gmail.com",
     "UsuarioTelefone":"11 2222-4444",
-    "Status":"Pendente",
-    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00",
-    "UpdatedAt":"2023-07-26T17:15:03.2785272-03:00"
+    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
 }
 ```
 ___
@@ -88,14 +84,9 @@ ___
 - Após consultar, ele postara a mensagem na exchange **order_ex**, com as informações do produto, junto com as do usuário.
     - Os dados são:
         - ProdutoUuid
-        - ProdutoNome
-        - ProdutoPreco
         - UsuarioNome
         - UsuarioEmail
         - UsuarioTelefone
-        - Status (por padrão vai ser "Pendente")
-        - CreatedAt (Usar o que já vem)
-        - UpdatedAt (no começo vai ser nulo)
 
 ### order-api
 - Ao consumir uma mensagem da fila **order_ex**, postar mensagem em **process_card_ex** para ser consumida pelo **process-card-api**

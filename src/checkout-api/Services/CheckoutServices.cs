@@ -19,7 +19,7 @@ public class CheckoutServices : ICheckoutServices
         _message_produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
     }
 
-    public async Task<ProdutoModel> ConsultarProdutoAsync(string uuid)
+    public async Task ValidarProdutoAsync(string uuid)
     {
         try
         {
@@ -27,74 +27,40 @@ public class CheckoutServices : ICheckoutServices
 
             using JsonDocument? jsonProduto = JsonDocument.Parse(response);
 
-            if (jsonProduto.RootElement.ValueKind is JsonValueKind.Object)
-            {
-                JsonElement produto = jsonProduto.RootElement;
+            if (jsonProduto.RootElement.ValueKind is not JsonValueKind.Object)
+                throw new JsonException("Algo foi retornado da API que não é um json");
 
-                return ConverterJsonParaObj(produto);
-            }
+            JsonElement produto = jsonProduto.RootElement;
 
-            throw new JsonException("Algo foi retornado da API que não é um json");
+            ValidarJsonProdutos(produto);
         }
         catch (JsonException error)
         {
-            throw new JsonException(error.Message);
+            throw new ProdutoNaoValidoException(error.Message);
         }
     }
 
-    public OrderMessageModel CriarOrderMessage(ProdutoModel dadosProduto, OrderModel dadosOrder)
+    public void ValidarUsuarioAsync(OrderModel order)
     {
-        return new OrderMessageModel()
-        {
-            ProdutoIUuid = dadosProduto.Uuid,
-            ProdutoNome = dadosProduto.Nome,
-            ProdutoPreco = dadosProduto.Preco,
-            UsuarioNome = dadosOrder.UsuarioNome,
-            UsuarioEmail = dadosOrder.UsuarioEmail,
-            UsuarioTelefone = dadosOrder.UsuarioTelefone,
-            CreatedAt = dadosOrder.CreatedAt,
-            UpdatedAt = DateTime.Now
-        };
+        // Nenhum problema aqui, pode continuar
     }
-
-    public async Task PublicarMensagemAsync(OrderMessageModel mensagem)
+    
+    public async Task PublicarMensagemAsync(OrderModel mensagem)
     {
         // Serializa o objeto OrderModel para JSON
         string json = JsonSerializer.Serialize(mensagem);
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync($"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);
+        await _httpClient.PostAsync($"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);    
     }
 
-    private ProdutoModel ConverterJsonParaObj(JsonElement produto)
+    private void ValidarJsonProdutos(JsonElement produto)
     {
-        string precoString = produto.GetProperty("price").ToString();
+        if (string.IsNullOrEmpty(produto.GetProperty("product").ToString())) 
+            throw new ProdutoNaoValidoException("O nome do produto é nulo ou vazio");
 
-        bool isParsed;
-        decimal price;
-
-        try
-        {
-            // Rodando no windows, é necessario usar essa linha para fazer o parse corretamente,
-            // já que além de ignorar o primeiro digito se fosse 0, fazendo "0,99" ser "99",
-            // iria também não retornar o simbolo ',', fazendo "5,22" ser "522",
-            // mas o GetCultureInfo estava estourando excessão no linux, por isso o catch
-            isParsed = decimal.TryParse(precoString, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"), out price);
-        }
-        catch (CultureNotFoundException)
-        {
-            isParsed = decimal.TryParse(precoString, out price);
-        }
-
-        return isParsed
-            ? new ProdutoModel
-            {
-                Uuid = produto.GetProperty("uuid").ToString(),
-                Nome = produto.GetProperty("product").ToString(),
-                Preco = price
-            }
-            : new ProdutoModel();
+        if (string.IsNullOrEmpty(produto.GetProperty("price").ToString())) 
+            throw new ProdutoNaoValidoException("O preco do produto é nulo ou vazio");
     }
-
 }

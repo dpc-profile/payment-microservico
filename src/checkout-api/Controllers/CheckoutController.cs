@@ -19,33 +19,33 @@ public class CheckoutController : ControllerBase
     {
         try
         {
-            if (string.IsNullOrEmpty(order.ProdutoUuid)) throw new ArgumentNullException("O UUID do produto é nulo.");
+            if (string.IsNullOrEmpty(order.ProdutoUuid)) throw new ProdutoNaoValidoException("O UUID do produto é nulo.");
 
-            // Consultar o produto-api para coletar os dados do pedido
-            ProdutoModel? produto = await _checkoutServices.ConsultarProdutoAsync(order.ProdutoUuid);
+            // Validar se o produto é valido
+            await _checkoutServices.ValidarProdutoAsync(order.ProdutoUuid);
 
-            // Junta os dados do pedido com os dados do usuario
-            OrderMessageModel mensagem = _checkoutServices.CriarOrderMessage(dadosProduto: produto, dadosOrder: order);
+            // Validar dados do usuário
+            _checkoutServices.ValidarUsuarioAsync(order);
 
             // Posta a mensagem na fila order_ex
-            await _checkoutServices.PublicarMensagemAsync(mensagem);
+            await _checkoutServices.PublicarMensagemAsync(order);
 
             return Ok();
-        }
-        catch (ArgumentNullException error)
-        {
-            _logger.LogError(message: error.Message, args: error);
-            return BadRequest("O UUID do produto é nulo.");
         }
         catch (HttpRequestException error)
         {
             _logger.LogWarning(message: error.Message, args: error);
             return NotFound("O produto procurado não existe.");
         }
-        catch (JsonException error)
+        catch (ProdutoNaoValidoException error)
         {
-            _logger.LogError(message: error.Message, args: error);
-            return NotFound("O produto procurado não existe.");
+            _logger.LogError(message: "O produto não é válido", args: error.Message);
+            return BadRequest("O produto não é válido");
+        }
+        catch (UsuarioNaoValidoException error)
+        {
+            _logger.LogError(message: "Os dados do usuário não é válido", args: error.Message);
+            return BadRequest("Os dados do usuário não é válido");
         }
         catch (Exception error)
         {
