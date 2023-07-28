@@ -34,8 +34,7 @@ Content-Type: application/json
     "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
     "UsuarioNome":"daniel",
     "UsuarioEmail":"daniel@gmail.com",
-    "UsuarioTelefone":"11 2222-4444",
-    "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
+    "UsuarioTelefone":"11 2222-4444"
 }
 ```
 
