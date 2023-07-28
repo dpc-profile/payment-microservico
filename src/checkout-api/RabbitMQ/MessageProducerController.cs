@@ -21,7 +21,7 @@ public class MessageProducerController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostMessage([FromBody] OrderMessageModel message)
+    public IActionResult PostMessage([FromBody] OrderModel message)
     {
         using (IConnection? connection = _factory.CreateConnection())
         {
@@ -29,7 +29,10 @@ public class MessageProducerController : ControllerBase
             {
                 channel.ExchangeDeclare(
                     exchange: _exchange,
-                    type: ExchangeType.Direct
+                    type: ExchangeType.Direct,
+                    durable: true,
+                    autoDelete: false,
+                    arguments: null
                 );
 
                 byte[] bytesMessage = JsonSerializer.SerializeToUtf8Bytes(message);

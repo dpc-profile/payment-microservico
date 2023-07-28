@@ -31,7 +31,10 @@ public class MessageProducerController : ControllerBase
             {
                 channel.ExchangeDeclare(
                     exchange: _exchange,
-                    type: ExchangeType.Direct
+                    type: ExchangeType.Direct,
+                    durable: true,
+                    autoDelete: false,
+                    arguments: null
                 );
 
                 byte[] bytesMessage = JsonSerializer.SerializeToUtf8Bytes(message);

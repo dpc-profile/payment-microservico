@@ -17,7 +17,4 @@ public record OrderModel
     [Required(ErrorMessage = "O telefone do usuário é necessário.")]
     [Phone(ErrorMessage = "O telefone informado é invalido.")]
     public string? UsuarioTelefone { get; init; }
-
-    [Required(ErrorMessage = "A data de criação do produto é necessaria.")]
-    public DateTime CreatedAt { get; init; } = DateTime.Now;
 }
