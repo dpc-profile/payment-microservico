@@ -23,7 +23,7 @@ GET http://localhost:5034/api/v1/Produto/{uuid-do-produto}
 ```
 
 ### checkout-api
-Consome uma mensagem com as informações do usuário e do uuid do produto, consulta as informações de produto no **produto-api** e valida o que foi recebido, "valida" as informações do usuário e postar na fila as informações do produto e do usuário, para o **order-api** consumir.
+Consome uma mensagem com as informações do usuário e o uuid do produto, checa o produto com **produto-api**, "valida" as informações do usuário e postar na fila para o **order-api** consumir.
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
@@ -40,7 +40,7 @@ Content-Type: application/json
 ```
 
 ```sh
-# Post final, aonde é produzido a mensagem para o RabbitMQ.
+# Post final, após as informações serem validadas, é criada a mensagem para o RabbitMQ.
 POST http://localhost:5221/api/v1/MessageProducer
 Content-Type: application/json
 
@@ -52,50 +52,58 @@ Content-Type: application/json
     "CreatedAt":"2023-07-26T17:15:03.1714833-03:00"
 }
 ```
+
 ___
 ## Pendente
 
 ### order-api
-Consumir a mensagem postada pelo **checkout-api**, consulta o **process-card-api(Nome temporario)** e processa a ordem.
+Consome mensagens postada pelo **checkout-api** e pelo **process-card-api**, cria um uuid para a transação, grava a transação em um banco de dados e posta uma mensagem para ser consumida pelo **process-card-api**. 
+Se a transação já está com o status "Aprovado" o processo é encerrado com sucesso. Se a transação está com status "Rejeitado", algumas tentativas a mais serão feitas, e em caso de falha, o pedido será cancelado.
 
-### process-card-api(Nome temporario)
-Simula uma confirmação de pagamento de cartão de credito.
+### process-card-api
+Simula uma confirmação de pagamento de cartão de credito, vai alterar o status para "Aprovado" ou "Rejeitado".
 
 ___
 ## Responsabilidades
 ### client-app
-- Fornece acesso ao usuário.
-- Quando o usuário finalizar o pedido, os dados desse pedido devem ser postado na fila **checkout_ex**.
-    - Os dados são:
+- Fornece uma interface para o usuário visualizar os produtos.
+- Fornece uma interface para o usuário realizar o pedido.
+- Postar na exchange **checkout_ex** o pedido finalizado.
+    - Exemplo dos dados:
         - ProdutoUuid
         - UsuarioNome
         - UsuarioEmail
         - UsuarioTelefone
-- Ao finalizar o pedido, exibir uma mensagem informando que o pedido está sendo processado.
-- (**Talves para implementar**) Nessa pagina, o usuário deve ter acesso ao ID da transação e um acompanhamento visual dos processos finalizandos.
-- (**Talves para implementar**) O usuário poderá consultar o status do pedido em uma aba, passando as mesmas informações do pedido(nome, email e telefone).
+
+- (**Não Implementado**) Fornecer meios do usuário consultar o status do pedido em uma pagina, ou com o UUID da transação, ou passando as mesmas informações do pedido(nome, email e telefone). Ao usar as informações do pedido, deve ser mostrado todos os pedidos feitos.
 
 ### produto-api
 - Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ### ckeckout-api
-- Ao consumir uma mensagem da fila **checkout_queue**, consulta o **produto-api** usando o ProdutoUuid.
-- Coleta os dados do pedido.
-- Após consultar, ele postara a mensagem na exchange **order_ex**, com as informações do produto, junto com as do usuário.
-    - Os dados são:
+- Consumir mensagems da fila **checkout_queue**.
+- Validar o produto consultado o **produto-api** para garantir se o produto ainda é valido.
+- Validação os dados do usuário(validação fake).
+- Posta a mensagem na exchange **order_ex**.
+    - Exemplo dos dados:
         - ProdutoUuid
         - UsuarioNome
         - UsuarioEmail
         - UsuarioTelefone
+        - CreatedAt
 
 ### order-api
-- Ao consumir uma mensagem da fila **order_ex**, postar mensagem em **process_card_ex** para ser consumida pelo **process-card-api**
-- Ao consumir uma mensagem da fila **processed_order_ex**, esse pedido será gravado no banco de dados, com isso finalizando o processo.
+- Consumir mensagens da fila **order_queue**.
+- Adicionar o UUID para o pedido.
+- Salvar o pedido no Redis.
+- Postar mensagens em **process_card_ex** para ser consumida pelo **process-card-api**.
+- Finaliza o processo do pedido.
 
 ### process-card-api
-- Ao consumir uma mensagem, altera seu status de "Pendente" para "Aprovado", e posta a mensagem novamente para o **order-api** finalizar o processo ao todo.
-- Ele postara a mensagem na fila **processed_order_ex**.
-- Ao alterar o status, o campo UpdatedAt também deve ser preenchido com o datetime
+- Consumir mensagens da fila **processed_order_queue**.
+- Altera o status da ordem de "Pendente" para "Aprovado" ou "Rejeitado".
+- Atualiza o UpdatedAt com o datetime atual.
+- Posta a mensagem na exchange **order_ex**.
 
 ___
 ## Executando(Dev)
