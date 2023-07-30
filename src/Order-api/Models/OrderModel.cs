@@ -6,7 +6,7 @@ public record OrderModel
 {
     public string? PedidoUuid { get; init; }
 
-    [EnumDataType(typeof(StatusEnum), ErrorMessage = "O campo Status deve ter o valor 'Pendente', 'Recusado' ou 'Aprovado'.")]
+    [EnumDataType(typeof(StatusEnum), ErrorMessage = "O campo Status deve ter o valor 'Aprovado', 'Pendente', 'Recusado' ou 'Cancelado'.")]
     public string? PedidoStatus { get; init; } = "Pendente";
 
     [Required(ErrorMessage = "O UUID do produto é necessario.")]
