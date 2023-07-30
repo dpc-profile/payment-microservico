@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "client-app", "src\client-ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "produto-api", "src\produto-api\produto-api.csproj", "{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Order-api", "src\Order-api\Order-api.csproj", "{18E385B7-5FEE-4D10-87C9-D1A3D731318A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18E385B7-5FEE-4D10-87C9-D1A3D731318A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E385B7-5FEE-4D10-87C9-D1A3D731318A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E385B7-5FEE-4D10-87C9-D1A3D731318A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E385B7-5FEE-4D10-87C9-D1A3D731318A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
