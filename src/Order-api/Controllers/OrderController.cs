@@ -5,36 +5,73 @@ namespace Order_api.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly ILogger _logger;
+    private readonly IOrderServices _orderServices;
 
-    public OrderController(ILogger<OrderModel> logger)
+    public OrderController(ILogger<OrderController> logger, IOrderServices orderServices)
     {
         _logger = logger;
+        _orderServices = orderServices;
     }
 
+    // Alterar o nome da função para algo mais claro
     [HttpPost]
-    public IActionResult Post([FromBody] OrderModel order)
+    public async Task<IActionResult> ProcessarPedidoAsync([FromBody] OrderModel order)
     {
-        switch (order.PedidoStatus)
+        try
         {
-            case "Aprovado":
-                // Fluxo do pedido aprovado
-                break;
-            case "Pendente":
-                // Fluxo do pedido pendente
-                break;
-            case "Recusado":
-                // Fluxo do pedido recusado
-                break;
-            case "Cancelado":
-                // Fluxo do pedido cancelado
-                break;
-            default:
-                // Fora do escopo
-                // Salva o pedido no db
-                // Cancelar pedido
-                return BadRequest();
-        }
+            await _orderServices.ValidarEAtualizarPedidoAsync(order);
 
-        return Ok();
+            switch (order.PedidoStatus)
+            {
+                case "Aprovado":
+                    await _orderServices.AprovarPedidoAsync(order);
+                    break;
+
+                case "Pendente":
+                    await _orderServices.ProcessarPagamentoAsync(order);
+                    break;
+
+                case "Recusado":
+                    await _orderServices.ReprocessarPagamentoAsync(order);
+                    break;
+
+                case "Cancelado":
+                    await _orderServices.CancelarPedidoAsync(order);
+                    break;
+
+                default:
+                    // Fora do escopo
+                    // Salva o pedido no db
+                    // Cancelar processo
+                    return BadRequest();
+            }
+
+            return Ok();
+        }
+        catch (HttpRequestException error)
+        {
+            _logger.LogWarning(message: error.Message, args: error);
+            return NotFound("Não foi possivel achar o produto procurado.");
+        }
+        catch (ProdutoNaoValidoException error)
+        {
+            _logger.LogWarning(message: "O produto não é válido", args: error.Message);
+            return BadRequest("O produto não é válido");
+        }
+        catch (FormatException error)
+        {
+            _logger.LogWarning(message: error.Message, args: error);
+            return BadRequest("Não foi possivel converter o preço do produto.");
+        }
+        catch (ArgumentNullException error)
+        {
+            _logger.LogError(error.Message, error);
+            return BadRequest("Algo de errado com o pedido ou o produto.");
+        }
+        catch (Exception error)
+        {
+            _logger.LogError(message: $"Erro não mapeado em {nameof(ProcessarPedidoAsync)}: ", args: error);
+            return BadRequest("Alguem tropeço e derrubou o pedido, acabou explodiu sobrando nada.");
+        }
     }
 }

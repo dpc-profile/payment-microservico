@@ -12,6 +12,8 @@ public record OrderModel
     [Required(ErrorMessage = "O UUID do produto é necessario.")]
     public string? ProdutoUuid { get; init; }
 
+    public decimal? ProdutoPreco {get; set;}
+
     [Required(ErrorMessage = "O nome do usuário é necessário.")]
     public string? UsuarioNome { get; init; }
 
