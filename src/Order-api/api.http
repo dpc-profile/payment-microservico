@@ -1,5 +1,5 @@
 ###
-POST http://localhost:5075/api/Order
+POST http://localhost:5075/api/v1/Order
 Content-Type: application/json
 
 {
@@ -9,3 +9,6 @@ Content-Type: application/json
    "UsuarioTelefone":"11 2222-4444",
    "CreatedAt":"2023-07-28T18:08:55.8822567-03:00"
 }
+
+###
+GET http://localhost:5075/api/v1/Order/91ebd480-962c-438f-ba2e-02f62bbb4081

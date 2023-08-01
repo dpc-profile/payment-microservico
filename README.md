@@ -5,7 +5,7 @@ ___
 Diferente do projeto original, que foi feito em Golang, todas as aplicações são feitas usando a versão 6 do .NET. As APIs são feitas em ASP.NET e o client-app é um MVC em ASP.NET. 
 Será usado o Kubernetes para orquestrar os serviços, RabbitMQ para mensageria e o Istio para Service Mesh.
 
-![Diagrama do Projeto](img/IntensivoMicroservicos.drawio.png)
+![Diagrama do Projeto](diagramas/servico-payment.png)
 
 ___
 ## Serviços
@@ -14,7 +14,7 @@ ___
 Parte front-end que se comunica com as APIs.
 
 ### produto-api
-Retorna do "banco de dados" todos os produtos ou um produto especifico.
+- Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ```sh
 GET http://localhost:5034/api/v1/Produto
@@ -56,7 +56,7 @@ ___
 ## Pendente
 
 ### order-api
-Consome mensagens postada pelo **checkout-api** e pelo **process-card-api**, cria um uuid para a transação, grava a transação em um banco de dados e posta uma mensagem para ser consumida pelo **process-card-api**. 
+Consome mensagens postada pelo **checkout-api** e pelo **process-card-api**, cria um uuid para a transação, grava a transação em cache e posta uma mensagem para ser consumida pelo **process-card-api**. 
 Se a transação já está com o status "Aprovado" o processo é encerrado com sucesso. Se a transação está com status "Rejeitado", algumas tentativas a mais serão feitas, e em caso de falha, o pedido será cancelado.
 
 ### process-card-api

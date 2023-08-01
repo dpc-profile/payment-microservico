@@ -4,16 +4,19 @@ public class OrderServices : IOrderServices
 {
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _config;
+    private readonly ICachingServices _caching;
 
     private readonly string _produto_uri;
 
-    public OrderServices(HttpClient httpClient, IConfiguration config)
+    public OrderServices(HttpClient httpClient, IConfiguration config, ICachingServices caching)
     {
         _httpClient = httpClient;
         _config = config;
+        _caching = caching;
 
         _produto_uri = _config["PRODUTO:URL"];
         _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+
     }
 
     public async Task ValidarEAtualizarPedidoAsync(OrderModel order)
@@ -41,17 +44,22 @@ public class OrderServices : IOrderServices
         throw new NotImplementedException();
     }
 
-    public Task CancelarPedidoAsync(OrderModel order)
+    public async Task ProcessarPagamentoAsync(OrderModel order)
     {
-        throw new NotImplementedException();
-    }
+        string uuid = Guid.NewGuid().ToString();
+        order.PedidoUuid = uuid;
 
-    public Task ProcessarPagamentoAsync(OrderModel order)
-    {
-        throw new NotImplementedException();
+        SalvarPedido(order);
+
+        await PublicarMensagemAsync(order);
     }
 
     public Task ReprocessarPagamentoAsync(OrderModel order)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CancelarPedidoAsync(OrderModel order)
     {
         throw new NotImplementedException();
     }
@@ -100,5 +108,33 @@ public class OrderServices : IOrderServices
         if (!Parsed) throw new FormatException("Não foi possivel converter o preço para decimal.");
 
         return price;
+    }
+
+    private async void SalvarPedido(OrderModel order)
+    {
+        string? PedidoUUID = order.PedidoUuid;
+
+        if (string.IsNullOrEmpty(PedidoUUID))
+            throw new ArgumentNullException("O UUID do pedido está vazio ou nulo.");
+
+        await _caching.SetCacheAsync(PedidoUUID, JsonSerializer.Serialize(order));
+
+    }
+
+    public async Task<string> PegarPedido(string pedidoUUID)
+    {
+        string pedidoCache = await _caching.GetCacheAsync(pedidoUUID);
+
+        return pedidoCache;
+    }
+
+    public async Task PublicarMensagemAsync(OrderModel mensagem)
+    {
+        // Serializa o objeto OrderModel para JSON
+        string json = JsonSerializer.Serialize(mensagem);
+
+        StringContent content = new(json, Encoding.UTF8, "application/json");
+
+        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);
     }
 }

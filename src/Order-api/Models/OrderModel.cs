@@ -4,7 +4,7 @@ namespace Order_api.Models;
 
 public record OrderModel
 {
-    public string? PedidoUuid { get; init; }
+    public string? PedidoUuid { get; set; }
 
     [EnumDataType(typeof(StatusEnum), ErrorMessage = "O campo Status deve ter o valor 'Aprovado', 'Pendente', 'Recusado' ou 'Cancelado'.")]
     public string? PedidoStatus { get; init; } = "Pendente";

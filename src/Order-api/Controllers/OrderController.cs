@@ -1,6 +1,6 @@
 namespace Order_api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class OrderController : ControllerBase
 {
@@ -13,7 +13,6 @@ public class OrderController : ControllerBase
         _orderServices = orderServices;
     }
 
-    // Alterar o nome da função para algo mais claro
     [HttpPost]
     public async Task<IActionResult> ProcessarPedidoAsync([FromBody] OrderModel order)
     {
@@ -73,5 +72,11 @@ public class OrderController : ControllerBase
             _logger.LogError(message: $"Erro não mapeado em {nameof(ProcessarPedidoAsync)}: ", args: error);
             return BadRequest("Alguem tropeço e derrubou o pedido, acabou explodiu sobrando nada.");
         }
+    }
+
+    [HttpGet("{pedidoUUID}")]
+    public async Task<ActionResult<string>> GetAsync(string pedidoUUID)
+    {
+        return await _orderServices.PegarPedido(pedidoUUID);
     }
 }
