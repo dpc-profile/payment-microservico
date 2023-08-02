@@ -11,4 +11,17 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5075/api/v1/Order/91ebd480-962c-438f-ba2e-02f62bbb4081
+POST http://localhost:5075/api/v1/Order
+Content-Type: application/json
+
+{
+   "PedidoUuid":"696fc8d9-6317-4be2-9bca-3f9048338ed1",
+   "PedidoStatus":"Recusado",
+   "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+   "ProdutoPreco":7.89,
+   "UsuarioNome":"daniel",
+   "UsuarioEmail":"daniel@gmail.com",
+   "UsuarioTelefone":"11 2222-4444",
+   "CreatedAt":"2023-07-28T18:08:55.8822567-03:00",
+   "UpdatedAt":"2023-08-02T16:45:36.8110066-03:00"
+}

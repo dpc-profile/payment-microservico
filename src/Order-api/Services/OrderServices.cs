@@ -39,9 +39,9 @@ public class OrderServices : IOrderServices
         }
     }
 
-    public Task AprovarPedidoAsync(OrderModel order)
+    public async Task AprovarPedidoAsync(OrderModel order)
     {
-        throw new NotImplementedException();
+        await SalvarPedidoAsync(order);
     }
 
     public async Task ProcessarPagamentoAsync(OrderModel order)
@@ -49,19 +49,33 @@ public class OrderServices : IOrderServices
         string uuid = Guid.NewGuid().ToString();
         order.PedidoUuid = uuid;
 
-        SalvarPedido(order);
+        await SalvarPedidoAsync(order);
 
-        await PublicarMensagemAsync(order);
+        await PostAsync(mensagem: order, uri: "MessageProducer");
     }
 
-    public Task ReprocessarPagamentoAsync(OrderModel order)
+    public async Task ReprocessarPagamentoAsync(OrderModel order)
     {
-        throw new NotImplementedException();
+        // Verifica se o updateAt tem mais de 1h a partir de agora
+        DateTime umaHoraDepois = order.UpdatedAt.AddHours(1);
+
+        if (DateTime.Now > umaHoraDepois)
+        {
+            order.PedidoStatus = "Cancelado";
+
+            // Postar novamente na exchange do 'Order'
+            await PostAsync(mensagem: order, uri: "Order");
+        }
+        else 
+        {
+            // Se não, postar novamente na exchange 'process-card'
+            await PostAsync(mensagem: order, uri: "MessageProducer");
+        }        
     }
 
-    public Task CancelarPedidoAsync(OrderModel order)
+    public async Task CancelarPedidoAsync(OrderModel order)
     {
-        throw new NotImplementedException();
+        await SalvarPedidoAsync(order);
     }
 
     private void ValidarJsonProduto(JsonElement produto)
@@ -73,16 +87,15 @@ public class OrderServices : IOrderServices
             throw new ProdutoNaoValidoException("O preco do produto é nulo ou vazio");
     }
 
-    private async Task<JsonElement> ConsultarProduto(string ProdutoUuid)
+    private async Task<JsonElement> ConsultarProduto(string produtoUuid)
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{ProdutoUuid}");
+        string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{produtoUuid}");
 
         using JsonDocument? jsonProduto = JsonDocument.Parse(response);
 
-        if (jsonProduto.RootElement.ValueKind is not JsonValueKind.Object)
-            throw new JsonException("Algo foi retornado da API que não é um json");
-
-        return jsonProduto.RootElement.Clone();
+        return jsonProduto.RootElement.ValueKind is not JsonValueKind.Object
+            ? throw new JsonException("Algo foi retornado da API que não é um json")
+            : jsonProduto.RootElement.Clone();
     }
 
     private decimal PrecoParaDecimal(JsonElement produto)
@@ -110,31 +123,24 @@ public class OrderServices : IOrderServices
         return price;
     }
 
-    private async void SalvarPedido(OrderModel order)
+    private async Task SalvarPedidoAsync(OrderModel order)
     {
-        string? PedidoUUID = order.PedidoUuid;
+        string? pedidoUUID = order.PedidoUuid;
 
-        if (string.IsNullOrEmpty(PedidoUUID))
+        if (string.IsNullOrEmpty(pedidoUUID))
             throw new ArgumentNullException("O UUID do pedido está vazio ou nulo.");
 
-        await _caching.SetCacheAsync(PedidoUUID, JsonSerializer.Serialize(order));
+        await _caching.SetCacheAsync(pedidoUUID, JsonSerializer.Serialize(order));
 
     }
-
-    public async Task<string> PegarPedido(string pedidoUUID)
-    {
-        string pedidoCache = await _caching.GetCacheAsync(pedidoUUID);
-
-        return pedidoCache;
-    }
-
-    public async Task PublicarMensagemAsync(OrderModel mensagem)
+    private async Task PostAsync(OrderModel mensagem, string uri)
     {
         // Serializa o objeto OrderModel para JSON
         string json = JsonSerializer.Serialize(mensagem);
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer", content);
+        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/{uri}", content);
     }
+
 }

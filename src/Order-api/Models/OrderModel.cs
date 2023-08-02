@@ -7,7 +7,7 @@ public record OrderModel
     public string? PedidoUuid { get; set; }
 
     [EnumDataType(typeof(StatusEnum), ErrorMessage = "O campo Status deve ter o valor 'Aprovado', 'Pendente', 'Recusado' ou 'Cancelado'.")]
-    public string? PedidoStatus { get; init; } = "Pendente";
+    public string? PedidoStatus { get; set; } = "Pendente";
 
     [Required(ErrorMessage = "O UUID do produto é necessario.")]
     public string? ProdutoUuid { get; init; }
@@ -27,4 +27,6 @@ public record OrderModel
 
     [Required(ErrorMessage = "A data de criação do pedido é necessaria.")]
     public DateTime CreatedAt { get; init; }
+
+    public DateTime UpdatedAt { get; init; } = DateTime.Now;
 }

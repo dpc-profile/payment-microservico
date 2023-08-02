@@ -37,12 +37,6 @@ public class OrderController : ControllerBase
                 case "Cancelado":
                     await _orderServices.CancelarPedidoAsync(order);
                     break;
-
-                default:
-                    // Fora do escopo
-                    // Salva o pedido no db
-                    // Cancelar processo
-                    return BadRequest();
             }
 
             return Ok();
@@ -74,9 +68,4 @@ public class OrderController : ControllerBase
         }
     }
 
-    [HttpGet("{pedidoUUID}")]
-    public async Task<ActionResult<string>> GetAsync(string pedidoUUID)
-    {
-        return await _orderServices.PegarPedido(pedidoUUID);
-    }
 }
