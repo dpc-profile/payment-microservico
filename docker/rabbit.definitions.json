@@ -1,87 +1,112 @@
 {
-    "rabbit_version": "3.12.1",
-    "rabbitmq_version": "3.12.1",
-    "product_name": "RabbitMQ",
-    "product_version": "3.12.1",
-    "users": [
-        {
-            "name": "rabbitmq",
-            "password_hash": "gkNvtdHIfk/YV7J+S0jmWg3rD9DCSFLfHtmeBetQZEWgqaAr",
-            "hashing_algorithm": "rabbit_password_hashing_sha256",
-            "tags": [
-                "administrator"
-            ],
-            "limits": {}
-        }
-    ],
-    "vhosts": [
-        {
-            "name": "/"
-        }
-    ],
-    "permissions": [
-        {
-            "user": "rabbitmq",
-            "vhost": "/",
-            "configure": ".*",
-            "write": ".*",
-            "read": ".*"
-        }
-    ],
-    "topic_permissions": [],
-    "parameters": [],
-    "global_parameters": [
-        {
-            "name": "internal_cluster_id",
-            "value": "rabbitmq-cluster-id-U22j2isCcLWKI4emuq1eKA"
-        }
-    ],
-    "policies": [],
-    "queues": [
-        {
-            "name": "teste_queue",
-            "vhost": "/",
-            "durable": true,
-            "auto_delete": false,
-            "arguments": {}
-        }
-    ],
-    "exchanges": [
-        {
-            "name": "teste2_ex",
-            "vhost": "/",
-            "type": "direct",
-            "durable": true,
-            "auto_delete": false,
-            "internal": false,
-            "arguments": {}
-        },
-        {
-            "name": "teste_ex",
-            "vhost": "/",
-            "type": "direct",
-            "durable": true,
-            "auto_delete": false,
-            "internal": false,
-            "arguments": {}
-        }
-    ],
-    "bindings": [
-        {
-            "source": "teste2_ex",
-            "vhost": "/",
-            "destination": "teste_queue",
-            "destination_type": "queue",
-            "routing_key": "",
-            "arguments": {}
-        },
-        {
-            "source": "teste_ex",
-            "vhost": "/",
-            "destination": "teste_queue",
-            "destination_type": "queue",
-            "routing_key": "",
-            "arguments": {}
-        }
-    ]
+  "rabbit_version": "3.12.2",
+  "rabbitmq_version": "3.12.2",
+  "product_name": "RabbitMQ",
+  "product_version": "3.12.2",
+  "users": [
+    {
+      "name": "rabbitmq",
+      "password_hash": "8zqsL7O4jhgpW7Iq5qyMRZd0se93aYv/pdK5eUkrU0V1Xfst",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [ "administrator" ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [ { "name": "/" } ],
+  "permissions": [
+    {
+      "user": "rabbitmq",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "internal_cluster_id",
+      "value": "rabbitmq-cluster-id-nJJetbG94D-dWbOnwKyOjg"
+    }
+  ],
+  "policies": [],
+  "queues": [
+    {
+      "name": "checkout_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "order_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "process-card_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "process-card_ex",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "order_ex",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "checkout_ex",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "checkout_ex",
+      "vhost": "/",
+      "destination": "checkout_queue",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "order_ex",
+      "vhost": "/",
+      "destination": "order_queue",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    },
+    {
+      "source": "process-card_ex",
+      "vhost": "/",
+      "destination": "process-card_queue",
+      "destination_type": "queue",
+      "routing_key": "",
+      "arguments": {}
+    }
+  ]
 }
