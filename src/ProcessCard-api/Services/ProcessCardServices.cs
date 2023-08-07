@@ -14,6 +14,7 @@ public class ProcessCardServices : IProcessCardServices
     public void FazerCobranca(OrderModel order)
     {
         order.PedidoStatus = "Aprovado";
+        order.UpdatedAt = DateTime.Now;
     }
 
     public async Task PostAsync(OrderModel mensagem, string uri)
