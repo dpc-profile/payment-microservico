@@ -15,7 +15,7 @@
 
         // POST api/v1/<ProcessCardController>
         [HttpPost]
-        public IActionResult ProcessarPagamento([FromBody] OrderModel order)
+        public async Task<IActionResult> ProcessarPagamento([FromBody] OrderModel order)
         {
             try
             {
@@ -23,7 +23,7 @@
                 _processCardServices.FazerCobranca(order);
 
                 // Devolver a ordem para o order_ex
-                _processCardServices.PostAsync(mensagem: order, uri: "MessageProducer");
+                await _processCardServices.PostAsync(mensagem: order, uri: "MessageProducer");
 
                 return Ok();
             }

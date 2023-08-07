@@ -66,11 +66,11 @@ public class OrderServices : IOrderServices
             // Postar novamente na exchange do 'Order'
             await PostAsync(mensagem: order, uri: "Order");
         }
-        else 
+        else
         {
             // Se não, postar novamente na exchange 'process-card'
             await PostAsync(mensagem: order, uri: "MessageProducer");
-        }        
+        }
     }
 
     public async Task CancelarPedidoAsync(OrderModel order)
