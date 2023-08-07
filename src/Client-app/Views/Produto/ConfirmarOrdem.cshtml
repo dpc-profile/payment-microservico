@@ -1,0 +1,22 @@
+@Model
+@{
+    ViewData["Title"] = "Confirmar Compra";
+}
+@if (Model is not null)
+{
+    <h1>Confirmar Compra</h1>
+    <p>Produto: @Model.Nome</p>
+    <p>Preço: R$@Model.Preco</p>
+
+    <br>
+    <h3>Insira seus dados</h3>
+	<form asp-controller="Produto" asp-action="EnviarOrdem" method="post">
+		<input type="hidden" name="ProdutoUuid" value="@Model.Uuid">
+		<input class="form-control form-control-lg" type="text" name="UsuarioNome" placeholder="Nome" aria-label="Nome">
+		<input class="form-control form-control-lg" type="text" name="UsuarioEmail" placeholder="Email" aria-label="Email">
+		<input class="form-control form-control-lg" type="text" name="UsuarioTelefone" placeholder="Telefone" aria-label="Telefone">
+        <br>
+        <button type="submit" class="btn btn-success">Concluir Compra</button>
+    </form>
+    
+}

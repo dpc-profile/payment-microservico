@@ -1,0 +1,26 @@
+// Começo do processo, infos ao consumir a mensagem.
+// ConsumirMensagemAsync em MessageConsumer.
+###
+POST http://localhost:5221/api/v1/Checkout
+Content-Type: application/json
+
+{
+    "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+    "UsuarioNome":"daniel",
+    "UsuarioEmail":"daniel@gmail.com",
+    "UsuarioTelefone":"11 2222-4444"
+}
+
+// Parte final, onde posta a mensagem.
+// PublicarMensagemAsync em CheckoutController
+###
+POST http://localhost:5221/api/v1/MessageProducer
+Content-Type: application/json
+
+{
+   "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
+   "UsuarioNome":"daniel",
+   "UsuarioEmail":"daniel@gmail.com",
+   "UsuarioTelefone":"11 2222-4444",
+   "CreatedAt":"2023-07-28T18:08:55.8822567-03:00"
+}
