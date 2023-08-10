@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+spec:
+  selector:
+    matchLabels:
+      app: checkout
+
+  template:
+    metadata:
+      labels:
+        app: checkout
+    spec:
+      containers:
+        - name: checkout
+          image: dpcprofile/eshop-checkout:v1
+          ports:
+            - containerPort: 80
+          env:
+            - name: "produto__URL"
+              value: "http://checkout-service"
+            - name: "RABBITMQ__HOST"
+              value: "rabbitmq-service"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: checkout-service
+  labels:
+    app: checkout-service
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+  selector:
+    app: checkout
