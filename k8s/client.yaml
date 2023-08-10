@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: localhost:5000/eshop-client
+          image: dpcprofile/eshop-client:v1
           ports:
             - containerPort: 80
 
