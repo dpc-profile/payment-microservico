@@ -1,38 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client
+  name: produto
 spec:
   selector:
     matchLabels:
-      app: client
+      app: produto
 
   template:
     metadata:
       labels:
-        app: client
+        app: produto
     spec:
       containers:
-        - name: client
-          image: dpcprofile/eshop-client:v1
+        - name: produto
+          image: dpcprofile/eshop-produto:v1
           ports:
             - containerPort: 80
-          env:
-            - name: "PRODUTO__URL"
-              value: "http://produto-service"
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-service
+  name: produto-service
   labels:
-    app: client-service
+    app: produto-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
+      nodePort: 30080
   selector:
-    app: client
+    app: produto
