@@ -1,27 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client
+  name: processcard
 spec:
   selector:
     matchLabels:
-      app: client
+      app: processcard
 
   template:
     metadata:
       labels:
-        app: client
+        app: processcard
     spec:
       containers:
-        - name: client
-          image: dpcprofile/eshop-client
+        - name: processcard
+          image: dpcprofile/eshop-processcard
           ports:
             - containerPort: 80
           env:
             - name: "PRODUTO__URL"
               value: "http://produto-service"
             - name: "RABBITMQ__HOST"
-              value: "http://rabbitmq-service"
+              value: "rabbitmq-service"
+            - name: "REDIS__HOST"
+              value: redis-service
             - name: "PORTA"
               value: "80"
           resources:
@@ -37,13 +39,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-service
+  name: processcard-service
   labels:
-    app: client-service
+    app: processcard-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
   selector:
-    app: client
+    app: processcard

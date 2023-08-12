@@ -18,10 +18,12 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: "produto__URL"
-              value: "http://checkout-service"
+            - name: "PRODUTO__URL"
+              value: "http://produto-service"
             - name: "RABBITMQ__HOST"
               value: "rabbitmq-service"
+            - name: "PORTA"
+              value: "80"
           resources:
             limits:
               memory: 512Mi
