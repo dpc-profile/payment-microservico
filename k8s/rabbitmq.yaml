@@ -27,6 +27,13 @@ spec:
               value: "rabbitmq"
             - name: RABBITMQ_DEFAULT_VHOST
               value: "/"
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
 
 ---
 

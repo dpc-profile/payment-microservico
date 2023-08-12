@@ -14,12 +14,19 @@ spec:
     spec:
       containers:
         - name: client
-          image: dpcprofile/eshop-client:v1
+          image: dpcprofile/eshop-client
           ports:
             - containerPort: 80
           env:
             - name: "PRODUTO__URL"
               value: "http://produto-service"
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.5"
 
 ---
 
