@@ -1,6 +1,52 @@
 version: '3.8'
 services:
-  rabbitMQ:
+  client-service:
+    container_name: client
+    image : "dpcprofile/eshop-client"
+    environment:
+      PRODUTO__URL: "http://produto-service"
+      RABBITMQ__HOST: "rabbitmq-service"
+      PORTA: 80
+    ports:
+      - "8080:80"
+  produto-service:
+    container_name: produto
+    image: dpcprofile/eshop-produto
+    ports:
+      - "8081:80"
+  checkout-service:
+    container_name: checkout
+    image : "dpcprofile/eshop-checkout"
+    environment:
+      PRODUTO__URL: "http://produto-service"
+      RABBITMQ__HOST: "rabbitmq-service"
+      PORTA: 80
+    ports:
+      - "8082:80"
+  order-service:
+    container_name: order
+    image : "dpcprofile/eshop-order"
+    environment:
+      PRODUTO__URL: "http://produto-service"
+      RABBITMQ__HOST: "rabbitmq-service"
+      REDIS__HOST: "redis-service"
+      PORTA: 80
+    ports:
+      - "8083:80"
+  processCard-service:
+    container_name: processcard
+    image : "dpcprofile/eshop-processcard"
+    environment:
+      PRODUTO__URL: "http://produto-service"
+      RABBITMQ__HOST: "rabbitmq-service"
+      REDIS__HOST: "redis-service"
+      PORTA: 80
+    ports:
+      - "8084:80"
+  
+
+  rabbitmq-service:
+    container_name: rabbitmq
     image: "rabbitmq:3-management"
     environment:
       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
@@ -10,7 +56,8 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
-  redis:
+  redis-service:
+    container_name: redis
     image: redis:alpine
     restart: always
     ports:
