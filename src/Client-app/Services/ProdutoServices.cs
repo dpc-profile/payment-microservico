@@ -5,22 +5,25 @@ namespace client_app.Services;
 public class ProdutoServices : IProdutoServices
 {
     private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _config;
 
-    private readonly string _uri;
+    private readonly string _produto_uri;
+    private readonly string _message_produce_uri;
 
-    public ProdutoServices(HttpClient httpClient, IConfiguration configuration)
+    public ProdutoServices(HttpClient httpClient, IConfiguration config)
     {
-        _configuration = configuration;
+        _config = config;
         _httpClient = httpClient;
 
-        _uri = _configuration["PRODUTO:URL"];
-        _uri = $"{_uri}/api/{_configuration["PRODUTO:VERSION"]}/Produto";
+        _produto_uri = _config["PRODUTO:URL"];
+        _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+
+        _message_produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
     }
 
     public async Task<ProdutoModel> GetProdutoPorUuidAsync(string uuid)
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: $"{_uri}/{uuid}");
+        string? response = await _httpClient.GetStringAsync(requestUri: $"{_produto_uri}/{uuid}");
 
         using JsonDocument? jsonProduto = JsonDocument.Parse(response);
 
@@ -36,7 +39,7 @@ public class ProdutoServices : IProdutoServices
 
     public async Task<IEnumerable<ProdutoModel>> GetProdutosAsync()
     {
-        string? response = await _httpClient.GetStringAsync(requestUri: _uri);
+        string? response = await _httpClient.GetStringAsync(requestUri: _produto_uri);
 
         using JsonDocument? produtos = JsonDocument.Parse(response);
 
@@ -63,7 +66,7 @@ public class ProdutoServices : IProdutoServices
 
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync("http://localhost:5086/api/v1/MessageProducer", content);
+        await _httpClient.PostAsync(requestUri: _message_produce_uri, content);
     }
 
     private ProdutoModel ConverterJsonParaObj(JsonElement produto)
