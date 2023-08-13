@@ -9,14 +9,8 @@ public class CachingServices : ICachingServices
         _cache = cache;
     }
 
-    public Task<string> GetCacheAsync(string pedidoUuid)
+    public async Task SetCacheAsync(string key, byte[] value)
     {
-        throw new NotImplementedException();
-        // return await _cache.GetStringAsync(pedidoUuid);
-    }
-
-    public async Task SetCacheAsync(string key, string value)
-    {
-        await _cache.SetStringAsync(key, value);
+        await _cache.SetAsync(key, value);
     }
 }
