@@ -130,9 +130,11 @@ public class OrderServices : IOrderServices
         if (string.IsNullOrEmpty(pedidoUUID))
             throw new ArgumentNullException("O UUID do pedido está vazio ou nulo.");
 
-        await _caching.SetCacheAsync(pedidoUUID, JsonSerializer.Serialize(order));
+        byte[] bytesCache = JsonSerializer.SerializeToUtf8Bytes(order);
 
+        await _caching.SetCacheAsync(pedidoUUID, bytesCache);
     }
+
     private async Task PostAsync(OrderModel mensagem, string uri)
     {
         // Serializa o objeto OrderModel para JSON

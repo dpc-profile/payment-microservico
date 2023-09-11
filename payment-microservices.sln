@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "checkout-api", "src\checkout-api\checkout-api.csproj", "{DA362CDE-84B1-4AEF-92C5-E2179D740A7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checkout-api", "src\Checkout-api\Checkout-api.csproj", "{DA362CDE-84B1-4AEF-92C5-E2179D740A7C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "client-app", "src\client-app\client-app.csproj", "{3F8556E7-5303-4E85-89B0-CF5452F126E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client-app", "src\Client-app\Client-app.csproj", "{3F8556E7-5303-4E85-89B0-CF5452F126E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "produto-api", "src\produto-api\produto-api.csproj", "{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Produto-api", "src\Produto-api\Produto-api.csproj", "{D16FD0D2-1CDF-41A8-89AD-18DB019422C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Order-api", "src\Order-api\Order-api.csproj", "{18E385B7-5FEE-4D10-87C9-D1A3D731318A}"
 EndProject
@@ -42,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EA5C9D8-A496-41E8-8616-E6A456F8AAFB}
 	EndGlobalSection
 EndGlobal

@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
    "PedidoUuid":"696fc8d9-6317-4be2-9bca-3f9048338ed1",
-   "PedidoStatus":"Recusado",
+   "PedidoStatus":"Pendente",
    "ProdutoUuid":"7d3af8b1-3755-4772-8f8d-72e25b1abefa",
    "ProdutoPreco":7.89,
    "UsuarioNome":"daniel",
