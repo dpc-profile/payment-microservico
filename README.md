@@ -2,7 +2,7 @@
 Projeto de aprendizado de microserviços, baseado no [Intensivão Microsserviços da FullCycle](https://www.youtube.com/playlist?list=PL5aY_NrL1rjuzBYy1Gro6IVDF1BPkPK_m), que tem como objetivo ter varias APIs comunicando entre sí,  mensageria, orquestrador e Service Mesh. 
 ___
 ## Tecnologias
-Diferente do projeto original, que foi feito em Golang, todas as aplicações são feitas usando a versão 6 do .NET. As APIs são feitas em ASP.NET e o client-app é um MVC em ASP.NET. 
+Diferente do projeto original, que foi feito em Golang, todas as aplicações foram feitas usando a versão 6 do .NET. As APIs são feitas em ASP.NET e o client-app é um MVC em ASP.NET. 
 Será usado o Kubernetes para orquestrar os serviços, RabbitMQ para mensageria e o Istio para Service Mesh.
 
 ![Diagrama do Projeto](diagramas/servico-payment.png)
@@ -14,7 +14,7 @@ ___
 Parte front-end que se comunica com as APIs.
 
 ### produto-api
-- Consulta o "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
+Consulta o "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ```sh
 GET http://localhost:5034/api/v1/Produto
@@ -23,7 +23,7 @@ GET http://localhost:5034/api/v1/Produto/{uuid-do-produto}
 ```
 
 ### checkout-api
-Consome as mensagens postada pelo checkout-api com as informações do usuário e o uuid do produto, checa o produto com **produto-api**, "valida" as informações do usuário e postar na fila para o **order-api** consumir.
+Consome as mensagens postada pelo **client-app** com as informações do usuário e o uuid do produto, checa o produto com **produto-api**, "valida" as informações do usuário e postar na fila para o **order-api** consumir.
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
@@ -50,11 +50,7 @@ Content-Type: application/json
 }
 ```
 ### order-api
-Consome as mensagens postada pelo **checkout-api**, cria um uuid para a transação, grava a transação no banco de dados e posta uma mensagem para ser consumida pelo **process-card-api**.
-Consome as mensagens postada pelo **process-card-api**, essas mensagems vão ter o status "Aprovado", "Reprovado" ou "Cancelado".  
-Se a transação está com status "Aprovado", é gravado no banco de dados e o processo é encerrado.
-Se a transação está com status "Rejeitado", algumas tentativas a mais serão feitas, e em caso de falha, o pedido será cancelado.
-Se a transação está com status "Cancelado", é gravado no banco de dados e o processo é encerrado.
+Consome as mensagens postada pelo **checkout-api** e do **process-card-api**, adiciona a key **PedidoStatus** e dependendo do status, envia a mensagem para o **process-card-api** ou encerra o processo
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
@@ -95,7 +91,7 @@ ___
 ### client-app
 - Fornece uma interface para o usuário visualizar os produtos.
 - Fornece uma interface para o usuário realizar o pedido.
-- Postar na exchange **checkout_ex** o pedido finalizado.
+- Posta na exchange **checkout_ex** o pedido finalizado.
     - Exemplo dos dados:
         - ProdutoUuid
         - UsuarioNome
@@ -106,9 +102,13 @@ ___
 
 ### produto-api
 - Consulta em um "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
+    - Exemplo dos dados:
+        - uuid
+        - product
+        - price
 
 ### ckeckout-api
-- Consumir mensagems da fila **checkout_queue**.
+- Consome mensagems da fila **checkout_queue**.
 - Validar o produto consultado o **produto-api** para garantir se o produto ainda é valido.
 - Validação os dados do usuário(validação fake).
 - Posta a mensagem na exchange **order_ex**.
@@ -120,11 +120,12 @@ ___
         - CreatedAt
 
 ### order-api
-- Consumir mensagens da fila **order_queue**.
-- Adicionar o UUID para o pedido.
-- Salvar o pedido no Redis.
-- Postar mensagens em **process_card_ex** para ser consumida pelo **process-card-api**.
-- Finaliza o processo do pedido.
+- Consome mensagens da fila **order_queue**. A fila **order_queue** recebe mensagem do **ckeckout-api** e do **process-card-api**.
+- Adiciona o UUID do pedido se não tiver.
+- Se também não tiver status, adiciona um "Pendente" e o pedido é postado na exchange **process_card_ex** para o **process-card-api** consumir.
+- Se o status do pedido estiver como "Aprovado", é gravado no banco de dados e o processo é encerrado.
+- Se o status do pedido estiver como "Rejeitado", algumas tentativas a mais serão feitas, e em caso de falha, o pedido será cancelado.
+- Se o status do pedido estiver como "Cancelado", é gravado no banco de dados e o processo é encerrado.
 
 ### process-card-api
 - Consumir mensagens da fila **processed_order_queue**.
@@ -134,7 +135,6 @@ ___
 
 ___
 ## Executando em Desenvolvimento
-### Source
 Para executar direto do codigo fonte, é necessario entrar em cada um dos projetos da pasta **src** e executar em ordem:
 
 - rabbitmq
@@ -155,7 +155,7 @@ $ dotnet watch
 A versão de produção usa o Kubernetes, mas um arquivo **docker-compose.yml** foi criado e pode ser usado para a mesma finalidade, ele vai baixar do Docker Hub as imagens dos serviços.
 ```sh
 # A pasta docker está na raiz do projeto
-cd docker
+$ cd docker
 
 $ docker compose up -d
 ```
