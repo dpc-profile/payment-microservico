@@ -1,5 +1,5 @@
 ###
-POST http://localhost:5075/api/v1/Order
+POST http://localhost:5075/api/Order
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5075/api/v1/Order
+POST http://localhost:5075/api/Order
 Content-Type: application/json
 
 {

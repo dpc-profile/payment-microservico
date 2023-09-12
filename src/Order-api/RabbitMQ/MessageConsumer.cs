@@ -63,6 +63,6 @@ public class MessageConsumer : BackgroundService
         StringContent? content = new(content: json, encoding: Encoding.UTF8, mediaType: "application/json");
 
         HttpClient client = new();
-        await client.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/{postMessage}", content);
+        await client.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/{postMessage}", content);
     }
 }

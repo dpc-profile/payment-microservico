@@ -24,6 +24,6 @@ public class ProcessCardServices : IProcessCardServices
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/{uri}", content);
+        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/{uri}", content);
     }
 }
