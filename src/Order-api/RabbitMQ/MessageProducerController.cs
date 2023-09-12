@@ -1,6 +1,6 @@
 namespace Order_api.RabbitMQ;
 
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class MessageProducerController : ControllerBase
 {

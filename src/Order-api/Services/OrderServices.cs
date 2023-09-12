@@ -15,7 +15,7 @@ public class OrderServices : IOrderServices
         _caching = caching;
 
         _produto_uri = _config["PRODUTO:URL"];
-        _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+        _produto_uri = $"{_produto_uri}/api/Produto";
 
     }
 
@@ -142,7 +142,7 @@ public class OrderServices : IOrderServices
 
         StringContent content = new(json, Encoding.UTF8, "application/json");
 
-        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/v1/{uri}", content);
+        await _httpClient.PostAsync(requestUri: $"http://localhost:{_config["PORTA"]}/api/{uri}", content);
     }
 
 }
