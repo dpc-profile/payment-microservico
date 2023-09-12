@@ -17,9 +17,9 @@ Parte front-end que se comunica com as APIs.
 Consulta o "banco de dados", retornando todos os produtos, ou o especificado pelo uuid.
 
 ```sh
-GET http://localhost:5034/api/v1/Produto
+GET http://localhost:5034/api/Produto
 
-GET http://localhost:5034/api/v1/Produto/{uuid-do-produto}
+GET http://localhost:5034/api/Produto/{uuid-do-produto}
 ```
 
 ### checkout-api
@@ -27,7 +27,7 @@ Consome as mensagens postada pelo **client-app** com as informações do usuári
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
-POST http://localhost:5221/api/v1/Checkout
+POST http://localhost:5221/api/Checkout
 Content-Type: application/json
 
 {
@@ -38,7 +38,7 @@ Content-Type: application/json
 }
 
 # Post final, após as informações serem validadas, é criada a mensagem para o RabbitMQ.
-POST http://localhost:5221/api/v1/MessageProducer
+POST http://localhost:5221/api/MessageProducer
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Consome as mensagens postada pelo **checkout-api** e do **process-card-api**, ad
 
 ```sh
 # Post feito pelo serviço MessageConsumer, para dar inicio ao processo.
-POST http://localhost:5075/api/v1/Order
+POST http://localhost:5075/api/Order
 Content-Type: application/json
 
 {
@@ -67,7 +67,7 @@ Content-Type: application/json
 
 # Como o status está pendente, ele será postado na exchange de order para ser consumido pelo processCard-api.
 # Esse processo acontece com os pedidos de status "Pendente" e "Reprovado". 
-POST http://localhost:5075/api/v1/Order
+POST http://localhost:5075/api/Order
 Content-Type: application/json
 
 {
