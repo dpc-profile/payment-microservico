@@ -14,9 +14,9 @@ public class CheckoutServices : ICheckoutServices
         _config = config;
 
         _produto_uri = _config["PRODUTO:URL"];
-        _produto_uri = $"{_produto_uri}/api/{_config["PRODUTO:VERSION"]}/Produto";
+        _produto_uri = $"{_produto_uri}/api/Produto";
 
-        _message_produce_uri = $"http://localhost:{_config["PORTA"]}/api/v1/MessageProducer";
+        _message_produce_uri = $"http://localhost:{_config["PORTA"]}/api/MessageProducer";
     }
 
     public async Task ValidarProdutoAsync(string uuid)

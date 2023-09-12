@@ -1,7 +1,7 @@
 // Começo do processo, infos ao consumir a mensagem.
 // ConsumirMensagemAsync em MessageConsumer.
 ###
-POST http://localhost:5221/api/v1/Checkout
+POST http://localhost:5221/api/Checkout
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 // Parte final, onde posta a mensagem.
 // PublicarMensagemAsync em CheckoutController
 ###
-POST http://localhost:5221/api/v1/MessageProducer
+POST http://localhost:5221/api/MessageProducer
 Content-Type: application/json
 
 {

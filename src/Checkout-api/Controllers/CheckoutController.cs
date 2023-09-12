@@ -1,7 +1,7 @@
 namespace checkout_api.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 public class CheckoutController : ControllerBase
 {
     private readonly ILogger _logger;
