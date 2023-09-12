@@ -1,5 +1,5 @@
 ###
-POST http://localhost:5041/api/v1/ProcessCard
+POST http://localhost:5041/api/ProcessCard
 Content-Type: application/json
 
 {

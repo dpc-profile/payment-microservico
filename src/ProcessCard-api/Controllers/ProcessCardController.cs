@@ -1,6 +1,6 @@
 ﻿namespace ProcessCard_api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProcessCardController : ControllerBase
     {
@@ -13,7 +13,7 @@
             _processCardServices = processCardServices;
         }
 
-        // POST api/v1/<ProcessCardController>
+        // POST api/<ProcessCardController>
         [HttpPost]
         public async Task<IActionResult> ProcessarPagamento([FromBody] OrderModel order)
         {
