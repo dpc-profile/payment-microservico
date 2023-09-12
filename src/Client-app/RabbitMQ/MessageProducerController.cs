@@ -2,7 +2,7 @@ using RabbitMQ.Client;
 
 namespace client_app.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class MessageProducerController : ControllerBase
 {
