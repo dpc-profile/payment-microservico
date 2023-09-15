@@ -46,22 +46,15 @@ services:
   
   rabbitmq-service:
     container_name: rabbitmq
-    build:
-      dockerfile: rabbitmq.Dockerfile
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
     ports:
       - "15672:15672"
       - "5672:5672"
-  # rabbitmq-service:
-  #   container_name: rabbitmq
-  #   image: "rabbitmq:3-management"
-  #   environment:
-  #     RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-  #     RABBITMQ_DEFAULT_USER: "rabbitmq"
-  #     RABBITMQ_DEFAULT_PASS: "rabbitmq"
-  #     RABBITMQ_DEFAULT_VHOST: "/"
-  #   ports:
-  #     - "15672:15672"
-  #     - "5672:5672"
   redis-service:
     container_name: redis
     image: redis:alpine
