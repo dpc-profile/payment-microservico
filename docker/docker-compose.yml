@@ -44,7 +44,6 @@ services:
     ports:
       - "8084:80"
   
-
   rabbitmq-service:
     container_name: rabbitmq
     image: "rabbitmq:3-management"

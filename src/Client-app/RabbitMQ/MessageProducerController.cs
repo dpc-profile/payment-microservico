@@ -17,8 +17,8 @@ public class MessageProducerController : ControllerBase
         _factory = new ConnectionFactory
         {
             HostName = _config["RABBITMQ:HOST"],
-            UserName = _config["RABBITMQ:USERNAME"],
-            Password = _config["RABBITMQ:PASSWORD"],
+            UserName = CryptoHelper.Decrypt(encryptText: _config["RABBITMQ:USERNAME"], decryptKey: _config["RABBITMQ:KEY"]),
+            Password = CryptoHelper.Decrypt(encryptText: _config["RABBITMQ:PASSWORD"], decryptKey: _config["RABBITMQ:KEY"]),
         };
     }
 

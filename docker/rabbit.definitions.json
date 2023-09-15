@@ -1,18 +1,24 @@
 {
-  "rabbit_version": "3.12.2",
-  "rabbitmq_version": "3.12.2",
+  "rabbit_version": "3.12.1",
+  "rabbitmq_version": "3.12.1",
   "product_name": "RabbitMQ",
-  "product_version": "3.12.2",
+  "product_version": "3.12.1",
   "users": [
     {
       "name": "rabbitmq",
-      "password_hash": "8zqsL7O4jhgpW7Iq5qyMRZd0se93aYv/pdK5eUkrU0V1Xfst",
+      "password_hash": "1GK+4GxQc5T/eAvchEc2tAb/3pNaBDD7XmUBp4O0duRYbNRx",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
-      "tags": [ "administrator" ],
+      "tags": [
+        "administrator"
+      ],
       "limits": {}
     }
   ],
-  "vhosts": [ { "name": "/" } ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
   "permissions": [
     {
       "user": "rabbitmq",

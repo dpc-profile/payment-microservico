@@ -11,3 +11,5 @@ global using ProcessCard_api.Services;
 
 global using RabbitMQ.Client;
 global using RabbitMQ.Client.Events;
+
+global using Crypto;
