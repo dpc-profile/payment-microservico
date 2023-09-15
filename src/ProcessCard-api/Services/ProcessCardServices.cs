@@ -1,4 +1,6 @@
-﻿namespace ProcessCard_api.Services;
+﻿using System.Collections;
+
+namespace ProcessCard_api.Services;
 
 public class ProcessCardServices : IProcessCardServices
 {
@@ -13,8 +15,42 @@ public class ProcessCardServices : IProcessCardServices
 
     public void FazerCobranca(OrderModel order)
     {
-        order.PedidoStatus = "Aprovado";
-        order.UpdatedAt = DateTime.Now;
+        // Essa função vai aprovar, reprovar ou cancelar
+        // um pedido de forma aleatória, apenas para
+        // estressar o fluxo do processo ao todo
+        // ou por conta de informações
+
+        if (string.IsNullOrEmpty(order.UsuarioNome))
+        {
+            order.PedidoStatus = "Cancelado";
+            order.UpdatedAt = DateTime.Now;
+            return;
+        }
+
+        Random? rand = new();
+
+        // random entre 0 e 50
+        int randInt = rand.Next(51);
+
+        int intIncrementado = randInt + order.UsuarioNome.Length - (int)Math.Round(order.ProdutoPreco);
+
+        // Converte em porcentage
+        int chances = intIncrementado * 100 / 50;
+        
+        switch(chances){
+            case >= 60:
+                order.PedidoStatus = "Aprovado";
+                order.UpdatedAt = DateTime.Now;
+                return;
+            case >= 20:
+                order.PedidoStatus = "Recusado";
+                order.UpdatedAt = DateTime.Now;
+                return;
+            default:
+                order.PedidoStatus = "Cancelado";
+                order.UpdatedAt = DateTime.Now;
+                return;
+        }
     }
 
     public async Task PostAsync(OrderModel mensagem, string uri)
