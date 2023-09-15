@@ -13,3 +13,5 @@ global using Order_api.Services;
 global using Order_api.Exceptions;
 global using Order_api.Services.Caching;
 global using Order_api.RabbitMQ;
+
+global using Crypto;
