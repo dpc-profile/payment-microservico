@@ -16,8 +16,8 @@ public class MessageConsumer : BackgroundService
         ConnectionFactory? factory = new()
         {
             HostName = _config["RABBITMQ:HOST"],
-            UserName = _config["RABBITMQ:USERNAME"],
-            Password = _config["RABBITMQ:PASSWORD"],
+            UserName = CryptoHelper.Decrypt(encryptText: _config["RABBITMQ:USERNAME"], decryptKey: _config["RABBITMQ:KEY"]),
+            Password = CryptoHelper.Decrypt(encryptText: _config["RABBITMQ:PASSWORD"], decryptKey: _config["RABBITMQ:KEY"]),
         };
 
         _queue = _config["RABBITMQ:QUEUE_CONSUME"];
